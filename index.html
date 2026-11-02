@@ -1,0 +1,7206 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Wallpaper Gallery</title>
+<style>
+:root{--bg:#111;--card:#1a1a1a;--text:#eaeaea;--accent:#0066ff}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial,sans-serif;background:var(--bg);color:var(--text)}
+.grid{display:grid;gap:12px;padding:12px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.card{border-radius:8px;overflow:hidden;background:var(--card)}img{width:100%;height:180px;object-fit:cover;display:block;background:#111}
+.meta{padding:6px 8px;font-size:0.85em}
+.search{width:100%;padding:6px 12px;margin:12px 0;border:1px solid #333;background:#222;color:#fff;font-size:1em}
+.filters button{padding:4px 10px;margin:2px 4px 2px 0;border:none;border-radius:4px;background:#333;color:#fff;cursor:pointer}
+.filters button:hover{background:#444}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center}z-light{z-index:9999;padding:20px;max-width:90vh;max-height:90vh}button.close{position:absolute;top:12px;right:12px;background:none;border:none;color:#fff;font-size:2em;cursor:pointer}
+</style></head><body>
+<div class="filters" id="filters"><button data-all>Todos</button></div>
+<input class="search" id="search" placeholder="Buscar por nome ou palavra-chave..."><div class="grid" id="grid"></div>
+
+<script>
+const data = [
+{
+"name": "10",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/10.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/10.png",
+"keywords": []
+},
+{
+"name": "100",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/100.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/100.png",
+"keywords": []
+},
+{
+"name": "105",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/105.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/105.png",
+"keywords": []
+},
+{
+"name": "109",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/109.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/109.png",
+"keywords": []
+},
+{
+"name": "123",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/123.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/123.png",
+"keywords": []
+},
+{
+"name": "137155645-p0",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/137155645_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/137155645_p0.jpg",
+"keywords": []
+},
+{
+"name": "1405357",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/1405357.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/1405357.jpg",
+"keywords": []
+},
+{
+"name": "156",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/156.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/156.png",
+"keywords": []
+},
+{
+"name": "1920x1080-the-black-suit-spiderman-4k-1u",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/1920x1080-the-black-suit-spiderman-4k-1u.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/1920x1080-the-black-suit-spiderman-4k-1u.jpg",
+"keywords": []
+},
+{
+"name": "1c7363173293467594726961c2771037",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/1c7363173293467594726961c2771037.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/1c7363173293467594726961c2771037.png",
+"keywords": []
+},
+{
+"name": "2",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/2.png",
+"keywords": []
+},
+{
+"name": "223",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/223.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/223.png",
+"keywords": []
+},
+{
+"name": "4",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/4.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/4.png",
+"keywords": []
+},
+{
+"name": "42",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/42.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/42.png",
+"keywords": []
+},
+{
+"name": "44322ee56a8a471eda81a1a62aa67e15",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/44322ee56a8a471eda81a1a62aa67e15.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/44322ee56a8a471eda81a1a62aa67e15.png",
+"keywords": []
+},
+{
+"name": "4d2cc0ac4c1f45fbab0dd14094673e5e",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/4d2cc0ac4c1f45fbab0dd14094673e5e.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/4d2cc0ac4c1f45fbab0dd14094673e5e.png",
+"keywords": []
+},
+{
+"name": "640be10d858e4bc3a32b8a3f450eaa38",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/640be10d858e4bc3a32b8a3f450eaa38.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/640be10d858e4bc3a32b8a3f450eaa38.png",
+"keywords": []
+},
+{
+"name": "72",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/72.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/72.png",
+"keywords": []
+},
+{
+"name": "79",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/79.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/79.png",
+"keywords": []
+},
+{
+"name": "80",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/80.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/80.png",
+"keywords": []
+},
+{
+"name": "9e70d5de76fa42d0a69c4ef9a742f400",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/9e70d5de76fa42d0a69c4ef9a742f400.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/9e70d5de76fa42d0a69c4ef9a742f400.png",
+"keywords": []
+},
+{
+"name": "a-car-parked-in-a-dark-alley",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a-car-parked-in-a-dark-alley.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a-car-parked-in-a-dark-alley.jpg",
+"keywords": []
+},
+{
+"name": "a-car-parked-in-a-street",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a-car-parked-in-a-street.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a-car-parked-in-a-street.jpg",
+"keywords": []
+},
+{
+"name": "a-cartoon-of-a-forest-with-mushrooms",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a-cartoon-of-a-forest-with-mushrooms.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a-cartoon-of-a-forest-with-mushrooms.png",
+"keywords": []
+},
+{
+"name": "a-cat-lying-on-a-piano",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a-cat-lying-on-a-piano.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a-cat-lying-on-a-piano.jpg",
+"keywords": []
+},
+{
+"name": "a12b68eca5dc4d9dc942614f522cfbbb",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a12b68eca5dc4d9dc942614f522cfbbb.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a12b68eca5dc4d9dc942614f522cfbbb.png",
+"keywords": []
+},
+{
+"name": "a3ddda18e0104b4afb66a7a9e5ca0daf",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a3ddda18e0104b4afb66a7a9e5ca0daf.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/a3ddda18e0104b4afb66a7a9e5ca0daf.png",
+"keywords": []
+},
+{
+"name": "anime-anime-girls-fate-series-saber-wallpaper-d935",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/anime-anime-girls-fate-series-saber-wallpaper-d935.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/anime-anime-girls-fate-series-saber-wallpaper-d935.jpg",
+"keywords": []
+},
+{
+"name": "anime-girl-red-eyes-fantasy-4k-wallpaper-uhdpaper",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/anime-girl-red-eyes-fantasy-4k-wallpaper-uhdpaper.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/anime-girl-red-eyes-fantasy-4k-wallpaper-uhdpaper.jpg",
+"keywords": []
+},
+{
+"name": "b-099",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/b-099.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/b-099.jpg",
+"keywords": []
+},
+{
+"name": "basement",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/basement.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/basement.jpg",
+"keywords": []
+},
+{
+"name": "bd1039a2f5894d01dee4efaa8ef063f4",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/bd1039a2f5894d01dee4efaa8ef063f4.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/bd1039a2f5894d01dee4efaa8ef063f4.png",
+"keywords": []
+},
+{
+"name": "black1",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/black1.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/black1.png",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers123",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers123.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers123.png",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers3",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers3.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers3.png",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers33",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers33.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers33.png",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers342",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers342.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers342.png",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers5",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers5.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapers5.png",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapersmaki",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapersmaki.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/by-discord-ggwallpapersmaki.png",
+"keywords": []
+},
+{
+"name": "bydiscord-ggwallpa1231pers",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/bydiscord-ggwallpa1231pers.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/bydiscord-ggwallpa1231pers.png",
+"keywords": []
+},
+{
+"name": "bydiscord-ggwallpapers",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/bydiscord-ggwallpapers.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/bydiscord-ggwallpapers.png",
+"keywords": []
+},
+{
+"name": "bydiscord-ggwallpapers654",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/bydiscord-ggwallpapers654.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/bydiscord-ggwallpapers654.png",
+"keywords": []
+},
+{
+"name": "chatgpt-image-14-de-set-de-2025-12-03-35",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/chatgpt-image-14-de-set-de-2025-12-03-35.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/chatgpt-image-14-de-set-de-2025-12-03-35.png",
+"keywords": []
+},
+{
+"name": "clean-11",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/clean-11.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/clean-11.png",
+"keywords": []
+},
+{
+"name": "clean-13",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/clean-13.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/clean-13.jpg",
+"keywords": []
+},
+{
+"name": "clean-16",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/clean-16.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/clean-16.png",
+"keywords": []
+},
+{
+"name": "clean-17",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/clean-17.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/clean-17.png",
+"keywords": []
+},
+{
+"name": "cnl7zmd",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/cnl7zmd.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/cnl7zmd.png",
+"keywords": []
+},
+{
+"name": "d23ffe6a2ce2409ea159791e19b4f441",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/d23ffe6a2ce2409ea159791e19b4f441.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/d23ffe6a2ce2409ea159791e19b4f441.png",
+"keywords": []
+},
+{
+"name": "d587c575e4cb4febb5bce8f9dd05d7cd",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/d587c575e4cb4febb5bce8f9dd05d7cd.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/d587c575e4cb4febb5bce8f9dd05d7cd.png",
+"keywords": []
+},
+{
+"name": "da18a0fe2a464635f774b14d08341b56",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/da18a0fe2a464635f774b14d08341b56.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/da18a0fe2a464635f774b14d08341b56.png",
+"keywords": []
+},
+{
+"name": "e1f883323e644410e5e4689237036938",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/e1f883323e644410e5e4689237036938.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/e1f883323e644410e5e4689237036938.png",
+"keywords": []
+},
+{
+"name": "ea70c19c71364b88ed8d451e0991ce42",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/ea70c19c71364b88ed8d451e0991ce42.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/ea70c19c71364b88ed8d451e0991ce42.png",
+"keywords": []
+},
+{
+"name": "f20366dc85a5499c86198e7edfbf528e",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/f20366dc85a5499c86198e7edfbf528e.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/f20366dc85a5499c86198e7edfbf528e.png",
+"keywords": []
+},
+{
+"name": "f4319459e11a4439b872bb5777670cfe",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/f4319459e11a4439b872bb5777670cfe.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/f4319459e11a4439b872bb5777670cfe.png",
+"keywords": []
+},
+{
+"name": "fondo12",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/fondo12.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/fondo12.png",
+"keywords": []
+},
+{
+"name": "g5ubmitwkaayk8s",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g5ubmitwkaayk8s.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g5ubmitwkaayk8s.jpg",
+"keywords": []
+},
+{
+"name": "g5ubmiuxuaahfrp",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g5ubmiuxuaahfrp.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g5ubmiuxuaahfrp.jpg",
+"keywords": []
+},
+{
+"name": "g5ubmivwkaaq0ue",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g5ubmivwkaaq0ue.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g5ubmivwkaaq0ue.jpg",
+"keywords": []
+},
+{
+"name": "g5ubml1w8aa-m9p",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g5ubml1w8aa-m9p.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g5ubml1w8aa-m9p.jpg",
+"keywords": []
+},
+{
+"name": "g8xjuekw4aa-wmw",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g8xjuekw4aa-wmw.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/g8xjuekw4aa-wmw.jpg",
+"keywords": []
+},
+{
+"name": "hancore-dos-moos-1",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-dos-moos-1.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-dos-moos-1.jpg",
+"keywords": []
+},
+{
+"name": "hancore-dos-moos-2",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-dos-moos-2.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-dos-moos-2.jpg",
+"keywords": []
+},
+{
+"name": "hancore-dos-moos-3",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-dos-moos-3.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-dos-moos-3.jpg",
+"keywords": []
+},
+{
+"name": "hancore-dos-moos-4",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-dos-moos-4.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-dos-moos-4.jpg",
+"keywords": []
+},
+{
+"name": "hancore-moodpeak-5",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-moodpeak-5.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-moodpeak-5.png",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-1",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-1.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-1.png",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-2",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-2.png",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-3",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-3.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-3.png",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-4",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-4.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-4.png",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-8",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-8.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hancore-turbonite-8.png",
+"keywords": []
+},
+{
+"name": "hgawmecxqaao6vo",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hgawmecxqaao6vo.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hgawmecxqaao6vo.jpg",
+"keywords": []
+},
+{
+"name": "hhcqdo5aoaa6o3j",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hhcqdo5aoaa6o3j.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/hhcqdo5aoaa6o3j.jpg",
+"keywords": []
+},
+{
+"name": "knight-building",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/knight-building.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/knight-building.png",
+"keywords": []
+},
+{
+"name": "knight-templar",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/knight-templar.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/knight-templar.jpg",
+"keywords": []
+},
+{
+"name": "konachan-405970",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/konachan-405970.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/konachan-405970.png",
+"keywords": [
+"all male",
+"arknights",
+"armor",
+"building",
+"camille (arknights)",
+"city",
+"dark",
+"fsuusux",
+"halo",
+"industrial",
+"male",
+"night",
+"pointed ears",
+"polychromatic",
+"suit",
+"wings"
+]
+},
+{
+"name": "konachan-406534",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/konachan-406534.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/konachan-406534.png",
+"keywords": [
+"3d",
+"aliasing",
+"bandage",
+"bicolored eyes",
+"blood",
+"dress",
+"flowers",
+"garter",
+"green hair",
+"instrument",
+"long hair",
+"pantyhose",
+"signed",
+"twintails",
+"wuthering waves",
+"zieeal"
+]
+},
+{
+"name": "konachan-407163",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/konachan-407163.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/konachan-407163.jpg",
+"keywords": [
+"breasts",
+"brown hair",
+"chinese clothes",
+"chinese dress",
+"dress",
+"garter",
+"girls frontline",
+"gun",
+"logo",
+"no bra",
+"red eyes",
+"tagme (artist)",
+"watermark",
+"weapon"
+]
+},
+{
+"name": "malenia-blade-of-3840x2160-10267",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/malenia-blade-of-3840x2160-10267.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/malenia-blade-of-3840x2160-10267.jpg",
+"keywords": []
+},
+{
+"name": "preto-1",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/preto-1.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/preto-1.png",
+"keywords": []
+},
+{
+"name": "requestproguild",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/requestproguild.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/requestproguild.png",
+"keywords": []
+},
+{
+"name": "requesweweqtproguild",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/requesweweqtproguild.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/requesweweqtproguild.png",
+"keywords": []
+},
+{
+"name": "screenshot-sw-nissan-silvia-s14-behrman-shutoko-re",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/screenshot-sw-nissan-silvia-s14-behrman-shutoko-re.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/screenshot-sw-nissan-silvia-s14-behrman-shutoko-re.png",
+"keywords": []
+},
+{
+"name": "wallhaven-212ldx",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-212ldx.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-212ldx.png",
+"keywords": [
+"abstract",
+"3d abstract",
+"shadow",
+"metal",
+"cgi",
+"digital art",
+"low light",
+"pattern",
+"silver"
+]
+},
+{
+"name": "wallhaven-21oqwm",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-21oqwm.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-21oqwm.png",
+"keywords": [
+"miyamoto musashi (vagabond)",
+"guts (berserk)",
+"berserk",
+"minimalism",
+"vagabond",
+"simple background",
+"edit",
+"black background",
+"dark",
+"yin and yang",
+"centered",
+"text",
+"english",
+"manga",
+"two men",
+"speech bubble",
+"sword",
+"men with swords",
+"beard",
+"short hair",
+"armor",
+"muscles"
+]
+},
+{
+"name": "wallhaven-21oyv6",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-21oyv6.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-21oyv6.jpg",
+"keywords": [
+"stellar blade",
+"playstation",
+"video game art",
+"screen shot",
+"video games",
+"sunlight",
+"space",
+"planet",
+"cgi",
+"stars",
+"dark background"
+]
+},
+{
+"name": "wallhaven-3qqlzv",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-3qqlzv.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-3qqlzv.png",
+"keywords": [
+"kazemi",
+"glsswrks",
+"women",
+"text",
+"looking at viewer",
+"parted lips",
+"long hair",
+"simple background",
+"tattoo",
+"ponytail",
+"selective coloring",
+"centered",
+"red lipstick",
+"ai art"
+]
+},
+{
+"name": "wallhaven-57weq8-1920x1080",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-57weq8_1920x1080.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-57weq8_1920x1080.png",
+"keywords": [
+"misaka mikoto",
+"to aru kagaku no railgun",
+"linux",
+"matrix",
+"bpytop",
+"anime girls"
+]
+},
+{
+"name": "wallhaven-5y32k8",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-5y32k8.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-5y32k8.png",
+"keywords": [
+"sairento witchi: chinmoku no majo no kakushigoto",
+"witch",
+"dragon",
+"kanji",
+"monochrome",
+"rain",
+"magic",
+"monica everett",
+"monica norton",
+"text",
+"japanese",
+"centered",
+"simple background",
+"shield",
+"picture-in-picture",
+"hoods",
+"looking at viewer",
+"standing",
+"creature",
+"wings",
+"long hair",
+"anime girls",
+"frontal view"
+]
+},
+{
+"name": "wallhaven-5y38d8",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-5y38d8.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-5y38d8.png",
+"keywords": [
+"doctor doom",
+"green light",
+"avengers doomsday",
+"cape",
+"simple background",
+"hoods",
+"centered",
+"marvel comics",
+"standing",
+"armor",
+"villains",
+"low light"
+]
+},
+{
+"name": "wallhaven-6l21lx",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-6l21lx.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-6l21lx.png",
+"keywords": [
+"claymore (anime)",
+"minimalism",
+"anime",
+"manga",
+"anime girls",
+"sword",
+"women",
+"weapon",
+"armor",
+"short hair",
+"black",
+"simple background",
+"dark",
+"centered",
+"walking",
+"women with swords",
+"cape",
+"female warrior",
+"rear view",
+"norihiro yagi"
+]
+},
+{
+"name": "wallhaven-6l27v6",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-6l27v6.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-6l27v6.jpg",
+"keywords": [
+"purple",
+"purple background",
+"simple background",
+"lines",
+"topography",
+"digital art",
+"ultrawide"
+]
+},
+{
+"name": "wallhaven-6lpw2w",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-6lpw2w.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-6lpw2w.png",
+"keywords": [
+"cyberpunk 2077",
+"night city (cyberpunk 2077)",
+"cd projekt red",
+"city",
+"futuristic",
+"video games",
+"video game art",
+"screen shot",
+"hologram",
+"city lights",
+"skyscraper",
+"building",
+"cgi",
+"sky",
+"signs",
+"night"
+]
+},
+{
+"name": "wallhaven-7j1d73",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-7j1d73.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-7j1d73.jpg",
+"keywords": [
+"gtgraphics",
+"space",
+"space station",
+"astronaut",
+"asteroid",
+"watermarked",
+"technology",
+"spacesuit",
+"stars",
+"cables",
+"rocks",
+"space art"
+]
+},
+{
+"name": "wallhaven-7jeozo",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-7jeozo.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-7jeozo.jpg",
+"keywords": [
+"artstation",
+"digital art",
+"sun rays",
+"wide screen",
+"space",
+"planet",
+"stars",
+"out space",
+"saturn",
+"spacescapes",
+"spaceship",
+"artwork",
+"wide angle",
+"lloyd drake-brockman",
+"stellaris",
+"video game art",
+"video games",
+"dlc",
+"low light",
+"space travel"
+]
+},
+{
+"name": "wallhaven-7jlyey",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-7jlyey.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-7jlyey.png",
+"keywords": [
+"bleach",
+"yhwach",
+"upscaled",
+"anime boys",
+"simple background",
+"eyes",
+"side view",
+"moustache"
+]
+},
+{
+"name": "wallhaven-8gd69k",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-8gd69k.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-8gd69k.jpg",
+"keywords": [
+"purple",
+"purple background",
+"abstract",
+"minimalism",
+"digital art",
+"light trails",
+"gradient",
+"ultrawide",
+"simple background",
+"blue",
+"centered",
+"low light"
+]
+},
+{
+"name": "wallhaven-8gjxyk",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-8gjxyk.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-8gjxyk.jpg",
+"keywords": [
+"chisa (wuthering waves)",
+"wuthering waves",
+"fantasy girl",
+"clothing cutout",
+"choker",
+"hime cut",
+"profile",
+"city",
+"night",
+"black shirt",
+"black hair",
+"side view",
+"school uniform",
+"thigh strap",
+"red eyes",
+"long hair",
+"ribbon",
+"video game girls",
+"bent legs",
+"blurry background",
+"legs",
+"whole body",
+"bangs",
+"looking at viewer",
+"socks",
+"black socks ",
+"city lights",
+"closed mouth",
+"bare midriff",
+"edit",
+"sky",
+"building"
+]
+},
+{
+"name": "wallhaven-8gr6go",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-8gr6go.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-8gr6go.png",
+"keywords": [
+"sam krug",
+"space",
+"blender",
+"mountains",
+"low light",
+"portrait display",
+"dark background",
+"planet",
+"landscape",
+"nature",
+"digital art",
+"cgi"
+]
+},
+{
+"name": "wallhaven-9o8v98",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-9o8v98.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-9o8v98.jpg",
+"keywords": [
+"anime girls",
+"chainsaw man",
+"yoru (chainsaw man)",
+"eyes",
+"simple background",
+"edit",
+"black background",
+"scars",
+"centered",
+"manga",
+"looking away",
+"black hair",
+"side view",
+"long hair",
+"ringed eyes",
+"closeup",
+"brazil"
+]
+},
+{
+"name": "wallhaven-d8dmdj",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-d8dmdj.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-d8dmdj.png",
+"keywords": [
+"simple background",
+"dark",
+"black background",
+"sitting",
+"neon genesis evangelion",
+"ayanami rei",
+"blue eyes",
+"looking at viewer",
+"plugsuit",
+"blue hair",
+"anime girls",
+"minimalism",
+"short hair"
+]
+},
+{
+"name": "wallhaven-d8wvxo",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-d8wvxo.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-d8wvxo.jpg",
+"keywords": [
+"japan",
+"car",
+"vehicle",
+"cgi",
+"video game art",
+"screen shot",
+"video games",
+"side view",
+"temple",
+"asian architecture",
+"sunlight",
+"black cars",
+"trees",
+"branch",
+"ferrari",
+"forza horizon 6",
+"sports car"
+]
+},
+{
+"name": "wallhaven-e82j6o",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-e82j6o.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-e82j6o.png",
+"keywords": [
+"the witcher",
+"the witcher 3: wild hunt",
+"roots",
+"flowers",
+"torches",
+"geralt of rivia",
+"armor",
+"sword",
+"creature",
+"night",
+"nature",
+"cd projekt red",
+"video game characters",
+"fire",
+"video game men",
+"standing",
+"video game art",
+"low light",
+"ponytail",
+"short hair",
+"white hair",
+"glowing",
+"men outdoors",
+"warrior"
+]
+},
+{
+"name": "wallhaven-ex",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-ex.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-ex.png",
+"keywords": []
+},
+{
+"name": "wallhaven-gw2gyq",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-gw2gyq.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-gw2gyq.png",
+"keywords": [
+"space",
+"galaxy",
+"stars",
+"gargantua ",
+"artstation",
+"digital art",
+"black holes",
+"low light",
+"glowing",
+"space art",
+"centered",
+"accretion disk"
+]
+},
+{
+"name": "wallhaven-gw2yqe",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-gw2yqe.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-gw2yqe.jpg",
+"keywords": [
+"stellar blade",
+"video games",
+"stellar blade: blood rain",
+"evie (stellar blade)",
+"kanji",
+"video game characters",
+"cgi",
+"video game girls",
+"standing",
+"video game art",
+"screen shot",
+"women outdoors",
+"building",
+"bodysuit",
+"steps",
+"neon",
+"low light",
+"night",
+"short hair"
+]
+},
+{
+"name": "wallhaven-gwdvw3",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-gwdvw3.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-gwdvw3.jpg",
+"keywords": [
+"technology",
+"abstract",
+"texture",
+"nvidia",
+"simple background",
+"waves",
+"digital art",
+"green"
+]
+},
+{
+"name": "wallhaven-jedpzw",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-jedpzw.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-jedpzw.jpg",
+"keywords": [
+"flowers",
+"simple background",
+"black background",
+"petals",
+"closeup",
+"depth of field",
+"nature",
+"centered"
+]
+},
+{
+"name": "wallhaven-jedrwm",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-jedrwm.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-jedrwm.jpg",
+"keywords": [
+"mortal shell ii",
+"screen shot",
+"video games"
+]
+},
+{
+"name": "wallhaven-jev1dy",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-jev1dy.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-jev1dy.png",
+"keywords": [
+"control (video game)",
+"table",
+"notes",
+"keyboards",
+"screens",
+"cigarettes",
+"video games",
+"computer",
+"low light",
+"video game art",
+"paper",
+"technology",
+"desk"
+]
+},
+{
+"name": "wallhaven-k82231",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-k82231.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-k82231.png",
+"keywords": [
+"aluminium os",
+"android (operating system)",
+"abstract",
+"colorful",
+"simple background",
+"dark",
+"blue background",
+"digital art"
+]
+},
+{
+"name": "wallhaven-k88yl7-1920x1080",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-k88yl7_1920x1080.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-k88yl7_1920x1080.png",
+"keywords": [
+"kuroienpitsu",
+"frontal view",
+"anime girls",
+"illustration",
+"zentreya",
+"fan art",
+"4k",
+"redhead",
+"blood",
+"solo",
+"cape",
+"looking at viewer",
+"virtual youtuber",
+"dark",
+"bruise",
+"hair between eyes",
+"dark background",
+"women",
+"blurry background",
+"hat",
+"standing",
+"short hair",
+"vshojo",
+"yellow eyes",
+"centered",
+"closed mouth"
+]
+},
+{
+"name": "wallhaven-k8d2jm",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-k8d2jm.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-k8d2jm.jpg",
+"keywords": [
+"pixiv",
+"arknights",
+"anime girls",
+"sitting",
+"fish",
+"pointy ears",
+"redhead",
+"long hair",
+"nicazi",
+"original characters",
+"centered",
+"ultrawide",
+"closed mouth",
+"chair",
+"looking away",
+"sparkles",
+"hands on knees",
+"bubbles",
+"animals",
+"letter",
+"water",
+"women with hats",
+"black socks ",
+"slouch socks",
+"whole body",
+"off shoulder",
+"collarbone",
+"choker"
+]
+},
+{
+"name": "wallhaven-k8lxzq",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-k8lxzq.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-k8lxzq.png",
+"keywords": [
+"cyberpunk 2077",
+"cyberpunk 2077 phantom liberty",
+"video games",
+"screen shot",
+"game cg",
+"video game art",
+"night",
+"sky",
+"city",
+"city lights",
+"building",
+"skyscraper",
+"low light",
+"futuristic",
+"aerial view"
+]
+},
+{
+"name": "wallhaven-lywevp",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-lywevp.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-lywevp.jpg",
+"keywords": [
+"aerial view",
+"dark",
+"dark background",
+"skyline",
+"clouds",
+"lights",
+"river",
+"cityscape",
+"new york city",
+"city lights",
+"skyscraper",
+"building",
+"sky",
+"city",
+"overcast",
+"water",
+"boat",
+"water ripples"
+]
+},
+{
+"name": "wallhaven-ml2ey9",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-ml2ey9.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-ml2ey9.png",
+"keywords": [
+"zenless zone zero",
+"miyabi (zenless zone zero)",
+"fox girl",
+"looking at viewer",
+"mostlybluewyatt",
+"cleavage",
+"choker",
+"simple background",
+"dark background",
+"long hair",
+"black hair",
+"collarbone",
+"black background",
+"bangs",
+"monochrome",
+"fox ears",
+"big boobs",
+"open mouth",
+"head tilt"
+]
+},
+{
+"name": "wallhaven-mlye38",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-mlye38.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-mlye38.jpg",
+"keywords": [
+"looking at viewer",
+"bleach",
+"inoue orihime",
+"red eyes",
+"black background",
+"angry",
+"dark background",
+"closeup",
+"anime girls",
+"red light",
+"long hair",
+"open mouth",
+"hair spread out",
+"hair"
+]
+},
+{
+"name": "wallhaven-nm37g8",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-nm37g8.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-nm37g8.jpg",
+"keywords": [
+"urahara kisuke",
+"bleach",
+"anime",
+"dark",
+"2006 (year)"
+]
+},
+{
+"name": "wallhaven-og2yem",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-og2yem.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-og2yem.jpg",
+"keywords": [
+"black myth: wukong",
+"screen shot",
+"playstation 5",
+"video game art",
+"trees",
+"video game characters",
+"cgi",
+"video games",
+"sun wukong",
+"video game men",
+"armor",
+"staff",
+"branch",
+"sky",
+"looking away",
+"standing",
+"men outdoors",
+"landscape"
+]
+},
+{
+"name": "wallhaven-oglrv9",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-oglrv9.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-oglrv9.jpg",
+"keywords": [
+"mountains",
+"landscape",
+"snow",
+"nature",
+"night",
+"dark",
+"clear sky",
+"sky",
+"unsplash"
+]
+},
+{
+"name": "wallhaven-ogylom",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-ogylom.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-ogylom.png",
+"keywords": [
+"sono bisque doll wa koi wo suru",
+"kitagawa marin",
+"manga",
+"simple background",
+"eyes",
+"black background",
+"bangs",
+"centered",
+"looking at viewer",
+"eyelashes",
+"monochrome"
+]
+},
+{
+"name": "wallhaven-powqje",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-powqje.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-powqje.jpg",
+"keywords": [
+"zzccwqjy",
+"illustration",
+"ultrawide",
+"jellyfish",
+"dark background",
+"animals",
+"colorful",
+"underwater",
+"digital art",
+"wide screen",
+"simple background",
+"closeup",
+"low light"
+]
+},
+{
+"name": "wallhaven-poy1zj",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-poy1zj.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-poy1zj.png",
+"keywords": [
+"cyberpunk 2077",
+"computer setup",
+"computer",
+"monochrome",
+"cyberpunk",
+"video game art",
+"screen shot",
+"video games",
+"low light",
+"futuristic",
+"technology",
+"simple background",
+"cgi",
+"black background",
+"screens",
+"cd projekt red"
+]
+},
+{
+"name": "wallhaven-qrgkpl",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-qrgkpl.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-qrgkpl.png",
+"keywords": [
+"reze (chainsaw man)",
+"quanxi (chainsaw man)",
+"hairbun",
+"anime girls",
+"green eyes",
+"painted nails",
+"black nails",
+"101neg",
+"simple background",
+"anime",
+"dark background",
+"dress",
+"centered",
+"cleavage",
+"frontal view",
+"shiny",
+"low light",
+"water drops",
+"chainsaw man",
+"manga"
+]
+},
+{
+"name": "wallhaven-qrzz57",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-qrzz57.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-qrzz57.jpg",
+"keywords": [
+"cyberpunk 2077",
+"cyberpunk 2077 phantom liberty",
+"cyberpunk",
+"video game art",
+"abstract",
+"black background",
+"glowing",
+"cd projekt red",
+"video games",
+"blue",
+"dark background"
+]
+},
+{
+"name": "wallhaven-rq6x2j",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rq6x2j.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rq6x2j.png",
+"keywords": [
+"video game characters",
+"wuthering waves",
+"yinlin (wuthering waves)",
+"suoming (wuthering waves)",
+"screen shot",
+"upscaled"
+]
+},
+{
+"name": "wallhaven-rqgp7j",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rqgp7j.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rqgp7j.jpg",
+"keywords": [
+"path to nowhere",
+"rain",
+"shield",
+"wavy hair",
+"glowing eyes",
+"anime games",
+"centered",
+"video game girls",
+"simple background",
+"mask",
+"long hair",
+"petals",
+"video game art",
+"standing",
+"rose"
+]
+},
+{
+"name": "wallhaven-rqgp7j-1920x1080",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rqgp7j_1920x1080.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rqgp7j_1920x1080.png",
+"keywords": [
+"path to nowhere",
+"rain",
+"shield",
+"wavy hair",
+"glowing eyes",
+"anime games",
+"centered",
+"video game girls",
+"simple background",
+"mask",
+"long hair",
+"petals",
+"video game art",
+"standing",
+"rose"
+]
+},
+{
+"name": "wallhaven-rqjj3j",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rqjj3j.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rqjj3j.png",
+"keywords": [
+"abstract",
+"dark",
+"dark background",
+"low light",
+"sand",
+"simple background"
+]
+},
+{
+"name": "wallhaven-rqqgkq",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rqqgkq.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-rqqgkq.jpg",
+"keywords": [
+"mei mei (jujutsu kaisen)",
+"jujutsu kaisen",
+"digital art",
+"dark background",
+"braids",
+"one eye obstructed",
+"solo",
+"anime girls",
+"illustration",
+"dark",
+"4k",
+"black dress",
+"smiling",
+"mostlybluewyatt",
+"centered",
+"dark lipstick",
+"hair over one eye",
+"dress",
+"signature",
+"long hair",
+"looking at viewer",
+"lipstick",
+"white hair"
+]
+},
+{
+"name": "wallhaven-vpyrm5",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-vpyrm5.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-vpyrm5.jpg",
+"keywords": [
+"takanashi rikka",
+"black background",
+"english",
+"chuunibyou demo koi ga shitai!",
+"reflection",
+"school uniform",
+"glowing",
+"minimalism",
+"plaid skirt",
+"dark",
+"line art",
+"anime girls",
+"simple background",
+"text",
+"centered",
+"bent legs",
+"arm support",
+"hush gesture",
+"schoolgirl",
+"short hair"
+]
+},
+{
+"name": "wallhaven-vpz668",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-vpz668.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-vpz668.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-w55m8x",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-w55m8x.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-w55m8x.jpg",
+"keywords": [
+"scenery",
+"anime",
+"sky",
+"starred sky",
+"solo",
+"silhouette",
+"evening",
+"nature",
+"grass",
+"dress",
+"flute",
+"furi (artist)",
+"women outdoors",
+"stars",
+"musical instrument",
+"sunrise",
+"sunlight",
+"clouds"
+]
+},
+{
+"name": "wallhaven-w55o3q",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-w55o3q.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-w55o3q.png",
+"keywords": [
+"assassin's creed: odyssey",
+"snow covered",
+"night sky",
+"ubisoft",
+"video games",
+"video game art",
+"screen shot",
+"sky",
+"stars",
+"cgi",
+"nature",
+"snow",
+"night",
+"mountains",
+"outdoors",
+"mount everest"
+]
+},
+{
+"name": "wallhaven-w5d3wp",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-w5d3wp.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-w5d3wp.jpg",
+"keywords": [
+"flowers",
+"park",
+"sunset",
+"photography",
+"outdoors",
+"dark background",
+"petals",
+"nature",
+"trees"
+]
+},
+{
+"name": "wallhaven-w5xex6",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-w5xex6.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-w5xex6.jpg",
+"keywords": [
+"anime girls",
+"short hair",
+"women outdoors",
+"skirt",
+"school uniform",
+"black c",
+"black clothing",
+"umbrella",
+"looking up",
+"long sleeves",
+"bus stop",
+"pleated skirt",
+"closed mouth",
+"profile",
+"street light",
+"black hair",
+"cyan nails",
+"black skirts",
+"rain",
+"puddle",
+"pixiv",
+"night",
+"street",
+"house",
+"side view",
+"standing"
+]
+},
+{
+"name": "wallhaven-x866ko",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-x866ko.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-x866ko.jpg",
+"keywords": [
+"anime",
+"anime girls",
+"neon genesis evangelion",
+"asuka langley soryu"
+]
+},
+{
+"name": "wallhaven-xe9y23",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-xe9y23.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-xe9y23.png",
+"keywords": [
+"wuthering waves",
+"hiyuki (wuthering waves)",
+"video game characters",
+"monochrome",
+"screen shot",
+"upscaled"
+]
+},
+{
+"name": "wallhaven-yq9rwx",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-yq9rwx.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-yq9rwx.png",
+"keywords": [
+"sam yang",
+"artwork",
+"illustration",
+"digital painting",
+"night",
+"starry night",
+"starred sky",
+"couple",
+"women",
+"smoking",
+"shooting stars",
+"looking up",
+"4k",
+"men",
+"stars",
+"women outdoors",
+"men outdoors",
+"low light",
+"lying on back",
+"lying down",
+"on the ground",
+"grass",
+"long hair",
+"cigarettes"
+]
+},
+{
+"name": "wallhaven-yqv2wx",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-yqv2wx.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-yqv2wx.jpg",
+"keywords": [
+"the great wave off kanagawa",
+"artwork",
+"asia",
+"sea",
+"japan",
+"ukiyo-e",
+"water",
+"dark background",
+"mountains",
+"volcano",
+"waves",
+"simple background",
+"dual monitors"
+]
+},
+{
+"name": "wallhaven-zp523j",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-zp523j.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-zp523j.jpg",
+"keywords": [
+"night",
+"stars",
+"sky",
+"glacier",
+"water",
+"neon",
+"photography",
+"upscaled",
+"mountains",
+"night sky",
+"low light",
+"nature"
+]
+},
+{
+"name": "wallhaven-zp9y7y",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-zp9y7y.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallhaven-zp9y7y.png",
+"keywords": [
+"brown dust 2",
+"rubia (brown dust)",
+"maid",
+"maid outfit",
+"elbow gloves",
+"pink hair",
+"dark background",
+"simple background",
+"edit",
+"selective coloring",
+"apron",
+"frills",
+"hair over one eye",
+"ponytail",
+"long hair",
+"looking at viewer",
+"blue eyes",
+"short sleeves",
+"wristband",
+"closed mouth",
+"headband",
+"hair ribbon",
+"ascot",
+"hand(s) on belly",
+"digital art"
+]
+},
+{
+"name": "wallpaperflare-com-wallpaper",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallpaperflare-com-wallpaper.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wallpaperflare-com-wallpaper.jpg",
+"keywords": []
+},
+{
+"name": "witchbroom-meyers-6043",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/witchbroom-meyers-6043.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/witchbroom-meyers-6043.jpg",
+"keywords": []
+},
+{
+"name": "wp14355445-guts-pc-4k-wallpapers",
+"color": "dark",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wp14355445-guts-pc-4k-wallpapers.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/dark/wp14355445-guts-pc-4k-wallpapers.jpg",
+"keywords": []
+},
+{
+"name": "1004017-colorized",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/1004017-colorized.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/1004017-colorized.png",
+"keywords": []
+},
+{
+"name": "116327446-p1",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/116327446_p1.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/116327446_p1.jpg",
+"keywords": []
+},
+{
+"name": "136233360-p0",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/136233360_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/136233360_p0.jpg",
+"keywords": []
+},
+{
+"name": "138032536-p0",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/138032536_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/138032536_p0.jpg",
+"keywords": []
+},
+{
+"name": "139396752-p0",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/139396752_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/139396752_p0.jpg",
+"keywords": []
+},
+{
+"name": "14",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/14.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/14.png",
+"keywords": []
+},
+{
+"name": "142335017-p0",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/142335017_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/142335017_p0.jpg",
+"keywords": []
+},
+{
+"name": "2",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/2.png",
+"keywords": []
+},
+{
+"name": "23",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/23.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/23.png",
+"keywords": []
+},
+{
+"name": "262cd771e74e4d68fbb62c05c4c0179b",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/262cd771e74e4d68fbb62c05c4c0179b.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/262cd771e74e4d68fbb62c05c4c0179b.png",
+"keywords": []
+},
+{
+"name": "2eddd5a9254c48539ea7597a1f0dbd34",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/2eddd5a9254c48539ea7597a1f0dbd34.webp",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/2eddd5a9254c48539ea7597a1f0dbd34.webp",
+"keywords": []
+},
+{
+"name": "68",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/68.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/68.png",
+"keywords": []
+},
+{
+"name": "7d4e5caa859d4468a3b4002969c8853f",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/7d4e5caa859d4468a3b4002969c8853f.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/7d4e5caa859d4468a3b4002969c8853f.png",
+"keywords": []
+},
+{
+"name": "87123bcb8a43121a72293abc069aeb10",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/87123bcb8a43121a72293abc069aeb10.webp",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/87123bcb8a43121a72293abc069aeb10.webp",
+"keywords": []
+},
+{
+"name": "87952141-p7",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/87952141_p7.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/87952141_p7.jpg",
+"keywords": []
+},
+{
+"name": "95976522cbbd49e4d658744ffb010895",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/95976522cbbd49e4d658744ffb010895.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/95976522cbbd49e4d658744ffb010895.png",
+"keywords": []
+},
+{
+"name": "a-body-of-water-with-a-bridge-and-trees",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/a-body-of-water-with-a-bridge-and-trees.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/a-body-of-water-with-a-bridge-and-trees.jpg",
+"keywords": []
+},
+{
+"name": "a-cartoon-of-a-woman-with-birds-in-the-air",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/a-cartoon-of-a-woman-with-birds-in-the-air.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/a-cartoon-of-a-woman-with-birds-in-the-air.png",
+"keywords": []
+},
+{
+"name": "alone-anime-girl-silhouette-night-scenery-8k-wallp",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/alone-anime-girl-silhouette-night-scenery-8k-wallp.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/alone-anime-girl-silhouette-night-scenery-8k-wallp.jpg",
+"keywords": []
+},
+{
+"name": "angel",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/angel.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/angel.jpg",
+"keywords": []
+},
+{
+"name": "anime-4",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-4.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-4.jpg",
+"keywords": []
+},
+{
+"name": "anime-6",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-6.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-6.png",
+"keywords": []
+},
+{
+"name": "anime-girl-blue-eyes-4k-wallpaper-uhdpaper-com-557",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-girl-blue-eyes-4k-wallpaper-uhdpaper-com-557.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-girl-blue-eyes-4k-wallpaper-uhdpaper-com-557.jpg",
+"keywords": []
+},
+{
+"name": "anime-girl-mask-assassins-fantasy-4k-wallpaper-uhd",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-girl-mask-assassins-fantasy-4k-wallpaper-uhd.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-girl-mask-assassins-fantasy-4k-wallpaper-uhd.jpg",
+"keywords": []
+},
+{
+"name": "anime-girl-smoking-4k-wallpaper-uhdpaper-com-263-5",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-girl-smoking-4k-wallpaper-uhdpaper-com-263-5.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/anime-girl-smoking-4k-wallpaper-uhdpaper-com-263-5.jpg",
+"keywords": []
+},
+{
+"name": "b-702",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/b-702.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/b-702.jpg",
+"keywords": []
+},
+{
+"name": "backiee-320375-landscape",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/backiee-320375-landscape.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/backiee-320375-landscape.jpg",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/by-discord-ggwallpapers.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/by-discord-ggwallpapers.png",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers4",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/by-discord-ggwallpapers4.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/by-discord-ggwallpapers4.png",
+"keywords": []
+},
+{
+"name": "car-wreck",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/car-wreck.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/car-wreck.png",
+"keywords": []
+},
+{
+"name": "cat-vibin",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/cat-vibin.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/cat-vibin.png",
+"keywords": []
+},
+{
+"name": "clorinde-genshin-5120x2880-21085",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/clorinde-genshin-5120x2880-21085.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/clorinde-genshin-5120x2880-21085.jpg",
+"keywords": []
+},
+{
+"name": "cornelius-dammrich-2003-mainshot-crop-hd-04",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/cornelius-dammrich-2003-mainshot-crop-hd-04.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/cornelius-dammrich-2003-mainshot-crop-hd-04.jpg",
+"keywords": []
+},
+{
+"name": "d3e083a6479f4ab4b1d352272ce94df4",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/d3e083a6479f4ab4b1d352272ce94df4.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/d3e083a6479f4ab4b1d352272ce94df4.png",
+"keywords": []
+},
+{
+"name": "df64fb8c60c14c9ade5e8d636a6303a4",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/df64fb8c60c14c9ade5e8d636a6303a4.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/df64fb8c60c14c9ade5e8d636a6303a4.png",
+"keywords": []
+},
+{
+"name": "dominik-mayer-15",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/dominik-mayer-15.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/dominik-mayer-15.jpg",
+"keywords": []
+},
+{
+"name": "fihyx5j",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/fihyx5j.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/fihyx5j.png",
+"keywords": []
+},
+{
+"name": "genshin-navia",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/genshin-navia.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/genshin-navia.png",
+"keywords": []
+},
+{
+"name": "geoevabwqaaddn2",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/geoevabwqaaddn2.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/geoevabwqaaddn2.jpg",
+"keywords": []
+},
+{
+"name": "gmh5rd4bcamigfh",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/gmh5rd4bcamigfh.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/gmh5rd4bcamigfh.jpg",
+"keywords": []
+},
+{
+"name": "grkhvw7acaalfua-colorized",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/grkhvw7acaalfua-colorized.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/grkhvw7acaalfua-colorized.png",
+"keywords": []
+},
+{
+"name": "grkhvw7acaalfua",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/grkhvw7acaalfua.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/grkhvw7acaalfua.jpg",
+"keywords": []
+},
+{
+"name": "hancore-moodpeak-1",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/hancore-moodpeak-1.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/hancore-moodpeak-1.png",
+"keywords": []
+},
+{
+"name": "hancore-moodpeak-2",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/hancore-moodpeak-2.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/hancore-moodpeak-2.jpg",
+"keywords": []
+},
+{
+"name": "hancore-moodpeak-4",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/hancore-moodpeak-4.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/hancore-moodpeak-4.jpg",
+"keywords": []
+},
+{
+"name": "images-steamusercontent",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/images-steamusercontent.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/images-steamusercontent.jpg",
+"keywords": []
+},
+{
+"name": "konachan-406747",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-406747.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-406747.png",
+"keywords": [
+"3d",
+"blue",
+"braids",
+"chain",
+"dress",
+"fate grand order",
+"fate (series)",
+"glasses",
+"gloves",
+"headdress",
+"long hair",
+"magic",
+"purple eyes",
+"reluvy",
+"urd (fate)",
+"watermark"
+]
+},
+{
+"name": "konachan-406882",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-406882.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-406882.png",
+"keywords": [
+"all male",
+"animal",
+"aqua hair",
+"arknights",
+"choker",
+"long hair",
+"male",
+"mizuki (arknights)",
+"shorts",
+"somnolence (hranxy)",
+"underwater",
+"water"
+]
+},
+{
+"name": "konachan-407324",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-407324.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-407324.png",
+"keywords": [
+"aqua eyes",
+"blue hair",
+"bow",
+"choker",
+"close",
+"fang",
+"feathers",
+"gloves",
+"hatsune miku",
+"long hair",
+"microphone",
+"nekometaru",
+"twintails",
+"vocaloid",
+"wings"
+]
+},
+{
+"name": "konachan-407403",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-407403.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-407403.png",
+"keywords": [
+"bentham (silver palace)",
+"blonde hair",
+"breasts",
+"cleavage",
+"gloves",
+"pantyhose",
+"purple eyes",
+"salmon88",
+"shirt",
+"short hair",
+"silver palace",
+"skirt",
+"weapon"
+]
+},
+{
+"name": "konachan-407548",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-407548.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/konachan-407548.jpg",
+"keywords": [
+"all male",
+"barefoot",
+"black hair",
+"crying",
+"flowers",
+"glasses",
+"male",
+"petals",
+"reflection",
+"school uniform",
+"short hair",
+"socks",
+"tears",
+"watanuki kimihiro",
+"water",
+"xxxholic"
+]
+},
+{
+"name": "lain-walk",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/lain-walk.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/lain-walk.jpg",
+"keywords": []
+},
+{
+"name": "raiden-shogun-5k-5120x2880-16500",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/raiden-shogun-5k-5120x2880-16500.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/raiden-shogun-5k-5120x2880-16500.jpg",
+"keywords": []
+},
+{
+"name": "random-wallpaper",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/random-wallpaper.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/random-wallpaper.jpg",
+"keywords": []
+},
+{
+"name": "retro2-live",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/retro2-live.gif",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/retro2-live.gif",
+"keywords": []
+},
+{
+"name": "reze-chainsaw-man-reze-arc-movie-8k-wallpaper-uhdp",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/reze-chainsaw-man-reze-arc-movie-8k-wallpaper-uhdp.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/reze-chainsaw-man-reze-arc-movie-8k-wallpaper-uhdp.jpg",
+"keywords": []
+},
+{
+"name": "river-city",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/river-city.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/river-city.jpg",
+"keywords": []
+},
+{
+"name": "romantic-night-sky-3840x2160-25549",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/romantic-night-sky-3840x2160-25549.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/romantic-night-sky-3840x2160-25549.jpg",
+"keywords": []
+},
+{
+"name": "solo-leveling-kamish-dragon-shadow-summon-4k-wallp",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/solo-leveling-kamish-dragon-shadow-summon-4k-wallp.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/solo-leveling-kamish-dragon-shadow-summon-4k-wallp.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-135w7w-1920x1080",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-135w7w_1920x1080.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-135w7w_1920x1080.png",
+"keywords": [
+"windows 10",
+"tux",
+"linux",
+"gnu",
+"microsoft",
+"humor",
+"crossover",
+"blue",
+"blue background",
+"operating system",
+"digital art"
+]
+},
+{
+"name": "wallhaven-1q2le9",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-1q2le9.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-1q2le9.jpg",
+"keywords": [
+"neverness to everness",
+"zankou (neverness to everness)",
+"video game girls",
+"weapon",
+"looking at viewer",
+"ponytail",
+"japanese clothes",
+"smiling",
+"light blue hair",
+"parted lips",
+"whole body",
+"floating hair",
+"platform sandals",
+"katana",
+"ergouzi echo",
+"bent legs",
+"cherry blossom",
+"petals",
+"painted toenails",
+"sash",
+"fighting stance",
+"gloves",
+"fingerless gloves",
+"thighs",
+"thigh strap",
+"elbow gloves",
+"mismatched gloves",
+"night",
+"women with swords",
+"toes",
+"holding sword",
+"fire sword",
+"abandoned",
+"nail polish",
+"black nails",
+"long hair"
+]
+},
+{
+"name": "wallhaven-1qdz21",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-1qdz21.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-1qdz21.png",
+"keywords": [
+"aeuna",
+"digital art",
+"artwork",
+"illustration",
+"digital painting",
+"blue",
+"outdoors",
+"daylight",
+"clouds",
+"traffic lights",
+"utility pole",
+"watermarked",
+"4k",
+"signs",
+"sky"
+]
+},
+{
+"name": "wallhaven-3q289y",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-3q289y.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-3q289y.png",
+"keywords": [
+"wuthering waves",
+"qingxiao (wuthering waves)",
+"video game characters",
+"screen shot",
+"video game art",
+"upscaled"
+]
+},
+{
+"name": "wallhaven-3q2ol3",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-3q2ol3.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-3q2ol3.jpg",
+"keywords": [
+"anime girls",
+"closed eyes",
+"neon genesis evangelion",
+"blue background",
+"clear sky",
+"birds",
+"simple background",
+"eliza_804",
+"open arms",
+"long hair",
+"orange hair",
+"headgear",
+"plugsuit",
+"animals",
+"head back",
+"closed mouth",
+"smiling",
+"asuka langley soryu"
+]
+},
+{
+"name": "wallhaven-3q6jv9",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-3q6jv9.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-3q6jv9.jpg",
+"keywords": [
+"artstation",
+"digital art",
+"video game characters",
+"cgi",
+"video game clothes",
+"fan art",
+"video games",
+"artwork",
+"fictional character",
+"sword",
+"female character",
+"blonde",
+"concept art",
+"the witcher",
+"holding sword",
+"women",
+"women with swords",
+"armor",
+"video game girls",
+"runes",
+"looking at viewer",
+"mist",
+"looking sideways",
+"weapon",
+"yellow eyes",
+"parted lips",
+"wide screen",
+"wide angle",
+"cirilla fiona elen riannon",
+"the witcher 3: wild hunt",
+"veins",
+"video game art",
+"platinum blonde",
+"sun rays",
+"glowing eyes",
+"glowing",
+"side view",
+"wojtek fus"
+]
+},
+{
+"name": "wallhaven-5ykdq8",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-5ykdq8.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-5ykdq8.png",
+"keywords": [
+"blue hair",
+"anime girls",
+"blue eyes",
+"long hair",
+"hwancat2",
+"closeup",
+"parted lips",
+"eyepatches",
+"hatsune miku",
+"vocaloid",
+"looking at viewer",
+"solo"
+]
+},
+{
+"name": "wallhaven-5yzd98",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-5yzd98.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-5yzd98.png",
+"keywords": [
+"reuben wu",
+"red moon",
+"sunset glow",
+"clouds",
+"sky",
+"full moon",
+"digital art",
+"wide screen"
+]
+},
+{
+"name": "wallhaven-8gg1do",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-8gg1do.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-8gg1do.jpg",
+"keywords": [
+"huashijw",
+"illustration",
+"outdoors",
+"women",
+"clouds",
+"silhouette",
+"standing",
+"dusk",
+"solo",
+"short hair",
+"digital art",
+"ultrawide",
+"signature",
+"sky",
+"noise",
+"bokeh",
+"low light",
+"women outdoors",
+"sunlight",
+"sunset glow"
+]
+},
+{
+"name": "wallhaven-8gg5v2",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-8gg5v2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-8gg5v2.png",
+"keywords": [
+"arch linux",
+"unixporn",
+"unix",
+"logo",
+"linux",
+"fog",
+"glowing",
+"light beams",
+"blue light",
+"operating system",
+"blue",
+"cyan",
+"minimalism",
+"abstract",
+"blue background",
+"simple background",
+"4k",
+"digital art"
+]
+},
+{
+"name": "wallhaven-8gg5v2-1920x1080",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-8gg5v2_1920x1080.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-8gg5v2_1920x1080.png",
+"keywords": [
+"arch linux",
+"unixporn",
+"unix",
+"logo",
+"linux",
+"fog",
+"glowing",
+"light beams",
+"blue light",
+"operating system",
+"blue",
+"cyan",
+"minimalism",
+"abstract",
+"blue background",
+"simple background",
+"4k",
+"digital art"
+]
+},
+{
+"name": "wallhaven-9o8ekw",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-9o8ekw.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-9o8ekw.jpg",
+"keywords": [
+"bent legs",
+"blue flames",
+"long hair",
+"white hair",
+"heterochromia",
+"kneeling",
+"women outdoors",
+"city",
+"punishing: gray raven",
+"lucia plume (punishing: gray raven)",
+"closed mouth",
+"straps",
+"black clothing",
+"cables",
+"video game girls",
+"ponytail",
+"anime games",
+"futuristic"
+]
+},
+{
+"name": "wallhaven-9ode5x",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-9ode5x.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-9ode5x.jpg",
+"keywords": [
+"artwork",
+"illustration",
+"digital painting",
+"city",
+"cityscape",
+"environment",
+"building",
+"sky",
+"moon",
+"short hair",
+"looking away",
+"pipes",
+"smoke",
+"digital art",
+"homutan1",
+"schoolgirl",
+"school uniform",
+"women",
+"ultrawide"
+]
+},
+{
+"name": "wallhaven-9oovg8",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-9oovg8.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-9oovg8.jpg",
+"keywords": [
+"digital art",
+"illustration",
+"science fiction",
+"wopgnop",
+"saturn",
+"planet",
+"rocks",
+"scenery",
+"signature",
+"space",
+"sky",
+"stars",
+"planetary rings",
+"standing",
+"shooting stars",
+"landscape"
+]
+},
+{
+"name": "wallhaven-d8oegm",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-d8oegm.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-d8oegm.jpg",
+"keywords": [
+"the wolf among us",
+"telltale games",
+"vehicle",
+"sidewalks",
+"video games",
+"building",
+"trash",
+"cgi",
+"video game art",
+"screen shot",
+"street light",
+"road",
+"car",
+"outdoors",
+"graffiti",
+"steps",
+"door",
+"window",
+"night",
+"headlights"
+]
+},
+{
+"name": "wallhaven-e86v1l",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-e86v1l.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-e86v1l.jpg",
+"keywords": [
+"short hair",
+"red eyes",
+"white hair",
+"hooded cloak",
+"submachine gun",
+"eotech",
+"revolver",
+"chest rig",
+"rain",
+"girls with guns",
+"suppressors",
+"seymour",
+"original characters",
+"thighs",
+"thigh strap",
+"rifles",
+"gun",
+"hair between eyes",
+"looking at viewer",
+"bricks",
+"siren head",
+"creature",
+"destruction",
+"vehicle",
+"car",
+"women outdoors"
+]
+},
+{
+"name": "wallhaven-e8ejjw",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-e8ejjw.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-e8ejjw.jpg",
+"keywords": [
+"simple background",
+"blue",
+"digital art",
+"abstract",
+"blue background"
+]
+},
+{
+"name": "wallhaven-exvdyk",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-exvdyk.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-exvdyk.jpg",
+"keywords": [
+"the eminence in shadow",
+"shadow garden",
+"anime",
+"moon",
+"luna (gamma)",
+"anime girls",
+"moonlight",
+"looking at viewer",
+"clouds",
+"sitting",
+"legs crossed",
+"mole under mouth",
+"moles",
+"long hair",
+"night",
+"city",
+"building",
+"hands in hair",
+"big boobs",
+"closed mouth",
+"hair blowing in the wind",
+"wind",
+"sky",
+"stars",
+"pointy ears"
+]
+},
+{
+"name": "wallhaven-gwdvje",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-gwdvje.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-gwdvje.jpg",
+"keywords": [
+"endlesscat",
+"touhou",
+"hieda no akyuu",
+"standing",
+"water",
+"sky",
+"stars",
+"centered",
+"reflection",
+"ripples",
+"glowing",
+"asian clothing",
+"rectangle",
+"bare shoulders",
+"short hair",
+"looking away",
+"low light",
+"anime girls",
+"rear view",
+"long sleeves",
+"lantern"
+]
+},
+{
+"name": "wallhaven-jedp9q",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-jedp9q.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-jedp9q.jpg",
+"keywords": [
+"women outdoors",
+"sitting",
+"women with cars",
+"choker",
+"black thigh highs",
+"shorts",
+"torn shorts",
+"arm support",
+"belly button",
+"high-angle",
+"signature",
+"bent legs",
+"zettai ryouiki",
+"bare midriff",
+"blue cars",
+"cutoffs",
+"closed mouth",
+"looking away",
+"flowers",
+"white flowers",
+"porsche",
+"licence plates",
+"hair clip",
+"knees together feet apart",
+"road",
+"branch",
+"thighs together",
+"long hair",
+"black hair",
+"hair ornament",
+"kkkula1",
+"looking sideways",
+"pixiv",
+"petals",
+"dated",
+"2026 (year)",
+"watermarked",
+"sitting on car",
+"car",
+"sneakers",
+"whole body",
+"thigh-highs",
+"anime girls"
+]
+},
+{
+"name": "wallhaven-jeeq3q",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-jeeq3q.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-jeeq3q.png",
+"keywords": [
+"makdeetsmuch",
+"water",
+"boat",
+"night",
+"outdoors",
+"starry night",
+"mountains",
+"reflection",
+"digital art",
+"people",
+"comet",
+"gradient",
+"lantern",
+"scenery",
+"stars",
+"couple",
+"lake",
+"trees",
+"landscape",
+"sky",
+"pixel art",
+"catpuccin"
+]
+},
+{
+"name": "wallhaven-jevz8y",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-jevz8y.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-jevz8y.png",
+"keywords": [
+"catppuccin mocha",
+"catpuccin",
+"space art",
+"simple background",
+"stars",
+"dark background",
+"space",
+"asteroid",
+"black holes",
+"centered",
+"glowing",
+"digital art",
+"circle"
+]
+},
+{
+"name": "wallhaven-jew8gm-1920x1080",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-jew8gm_1920x1080.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-jew8gm_1920x1080.png",
+"keywords": [
+"elizabeth rose bloodflame",
+"dark background",
+"redhead",
+"anime girls",
+"illustration",
+"digital art",
+"hololive english",
+"floating hair",
+"red eyes",
+"virtual youtuber",
+"sword",
+"hair between eyes",
+"solo",
+"fictional character",
+"women",
+"ressan0_0",
+"signature",
+"glowing",
+"closed mouth",
+"two tone hair",
+"frontal view",
+"pixiv",
+"one eye obstructed",
+"simple background",
+"gloves",
+"black gloves",
+"wide screen",
+"long hair",
+"looking at viewer"
+]
+},
+{
+"name": "wallhaven-k8d851",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-k8d851.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-k8d851.jpg",
+"keywords": [
+"percivale",
+"night",
+"train",
+"flashlight",
+"snow",
+"winter",
+"electric line",
+"digital art",
+"artwork",
+"women outdoors",
+"signature",
+"headlights",
+"standing",
+"looking away",
+"short hair",
+"snow covered"
+]
+},
+{
+"name": "wallhaven-k8dd6m",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-k8dd6m.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-k8dd6m.jpg",
+"keywords": [
+"lain lopez",
+"digital art",
+"artwork",
+"illustration",
+"digital painting",
+"nature",
+"landscape",
+"environment",
+"storm",
+"clouds",
+"overcast",
+"sky",
+"night",
+"nightscape",
+"outdoors",
+"lightning",
+"ultrawide"
+]
+},
+{
+"name": "wallhaven-lyj2ky",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-lyj2ky.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-lyj2ky.jpg",
+"keywords": [
+"anime girls",
+"anime boys",
+"rain",
+"looking at viewer",
+"faizkyokaz",
+"standing",
+"arm(s) behind back",
+"vehicle",
+"taillights",
+"school uniform",
+"schoolgirl",
+"portrait",
+"short hair",
+"schoolbags",
+"white cars",
+"low light",
+"house",
+"trees",
+"sky",
+"long sleeves",
+"yellow shirt",
+"jeans",
+"women outdoors",
+"men outdoors",
+"whole body"
+]
+},
+{
+"name": "wallhaven-lyk5gp",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-lyk5gp.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-lyk5gp.jpg",
+"keywords": [
+"anime",
+"anime girls",
+"shiori novella",
+"rain",
+"water drops",
+"dark hair",
+"blonde",
+"city",
+"night",
+"two tone hair",
+"yellow eyes",
+"frontal view",
+"closeup",
+"hair between eyes",
+"face",
+"horarux",
+"virtual youtuber",
+"injured",
+"hair accessories",
+"women outdoors",
+"wet",
+"low light",
+"centered"
+]
+},
+{
+"name": "wallhaven-lywp1q-1920x1080",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-lywp1q_1920x1080.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-lywp1q_1920x1080.png",
+"keywords": [
+"linux",
+"women",
+"mask",
+"blue eyes",
+"cachyos linux",
+"operating system",
+"choker",
+"simple background",
+"fingers",
+"black nails",
+"painted nails",
+"frontal view",
+"centered",
+"two tone hair",
+"long hair",
+"cat girl",
+"cat ears"
+]
+},
+{
+"name": "wallhaven-m3ydv8",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-m3ydv8.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-m3ydv8.png",
+"keywords": [
+"bocchi the rock!",
+"anime girls",
+"pixiv",
+"yamada ryo",
+"short hair",
+"blue hair",
+"yellow eyes",
+"moles",
+"mole under eye",
+"looking up",
+"minimalism"
+]
+},
+{
+"name": "wallhaven-mlyv21",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-mlyv21.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-mlyv21.png",
+"keywords": [
+"nengoro",
+"pixiv",
+"original characters",
+"sky",
+"clouds",
+"anime girls",
+"stars",
+"lying down",
+"ultrawide",
+"letterboxed",
+"women outdoors",
+"sitting",
+"lying on back",
+"two women",
+"signature",
+"short hair",
+"hairbun",
+"one arm up",
+"bokeh",
+"sleeveless",
+"night",
+"glowing",
+"low light",
+"on the ground"
+]
+},
+{
+"name": "wallhaven-og6jkp",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-og6jkp.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-og6jkp.png",
+"keywords": [
+"blurred",
+"bokeh",
+"purple",
+"orange",
+"blue",
+"titanium",
+"custom",
+"blurry background",
+"colorful",
+"gradient",
+"digital art"
+]
+},
+{
+"name": "wallhaven-og6wom",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-og6wom.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-og6wom.jpg",
+"keywords": [
+"ui_uiiiiiiiii",
+"wuthering waves",
+"yangyang (wuthering waves)",
+"anime girls",
+"painting",
+"resting head",
+"long hair",
+"lying down",
+"lying on side",
+"cleavage",
+"watermarked",
+"ultrawide",
+"closed mouth",
+"blue eyes",
+"two tone hair",
+"hair accessories",
+"tassels",
+"paint brushes",
+"rings",
+"fingers",
+"depth of field",
+"moles",
+"mole under eye"
+]
+},
+{
+"name": "wallhaven-ogjgyl",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-ogjgyl.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-ogjgyl.png",
+"keywords": [
+"theprotagonists",
+"sky",
+"clouds",
+"plants",
+"grass",
+"watermarked",
+"digital art",
+"aircraft",
+"flying",
+"airplane",
+"skyscape"
+]
+},
+{
+"name": "wallhaven-pojpdm",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-pojpdm.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-pojpdm.jpg",
+"keywords": [
+"anime girls",
+"anime boys",
+"clouds",
+"japanese",
+"summer",
+"ocean view",
+"sea",
+"mountains",
+"clear sky",
+"convex mirror",
+"sky",
+"short hair",
+"long hair",
+"open mouth",
+"branch",
+"water",
+"signs",
+"schoolboys",
+"schoolgirl",
+"school uniform",
+"cityscape",
+"short sleeves",
+"bicycle"
+]
+},
+{
+"name": "wallhaven-qrg9g7",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-qrg9g7.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-qrg9g7.jpg",
+"keywords": [
+"digital art",
+"artwork",
+"illustration",
+"digital painting",
+"maël martin",
+"space",
+"space art",
+"moon",
+"science fiction",
+"motorcycle",
+"wide screen",
+"ultrawide",
+"dust",
+"dome",
+"stars",
+"taillights",
+"driving",
+"futuristic",
+"glowing"
+]
+},
+{
+"name": "wallhaven-qro5vq",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-qro5vq.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-qro5vq.jpg",
+"keywords": [
+"printstream",
+"white hair",
+"white jacket",
+"hair ornament",
+"gradient eyes",
+"collared shirt",
+"long hair",
+"umbrella",
+"xydawn2048",
+"closed mouth",
+"hair accessories",
+"face",
+"hair clip",
+"looking at viewer",
+"simple background",
+"rain",
+"anime girls",
+"frontal view",
+"women outdoors",
+"blue eyes"
+]
+},
+{
+"name": "wallhaven-qrop2l",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-qrop2l.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-qrop2l.jpg",
+"keywords": [
+"gradient",
+"texture",
+"simple background",
+"waves",
+"digital art",
+"noise",
+"two tone"
+]
+},
+{
+"name": "wallhaven-qz2xpd",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-qz2xpd.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-qz2xpd.png",
+"keywords": [
+"mbcc",
+"path to nowhere",
+"video games",
+"anime games",
+"anime girls"
+]
+},
+{
+"name": "wallhaven-vpeew3",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-vpeew3.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-vpeew3.jpg",
+"keywords": [
+"anime boys",
+"astronaut",
+"floating hair",
+"blue flowers",
+"angel wings",
+"short sleeves",
+"space",
+"angel",
+"planet",
+"science fiction",
+"white wings",
+"profile",
+"stars",
+"smiling",
+"collared shirt",
+"watermarked",
+"kazari tayu",
+"face to face",
+"spacesuit",
+"starred sky",
+"white shirt",
+"gray hair",
+"wings",
+"closed eyes",
+"2022 (year)",
+"dated",
+"ultrawide",
+"side view",
+"2026 (year)",
+"standing"
+]
+},
+{
+"name": "wallhaven-vppwv3",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-vppwv3.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-vppwv3.jpg",
+"keywords": [
+"men",
+"solitude",
+"alone",
+"christmas presents",
+"nature",
+"rutger van de steeg",
+"winter",
+"men outdoors",
+"moonlight",
+"wide screen",
+"digital art",
+"snow",
+"trees",
+"forest",
+"traveler",
+"glowing",
+"snowfall",
+"low light",
+"presents",
+"pine trees",
+"lantern",
+"christmas",
+"standing"
+]
+},
+{
+"name": "wallhaven-w557rr",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-w557rr.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-w557rr.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-x6x1pd",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-x6x1pd.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-x6x1pd.jpg",
+"keywords": [
+"bleach",
+"kurosaki ichigo",
+"bankai",
+"looking at viewer",
+"anime boys",
+"watermarked",
+"sword",
+"men with swords",
+"short hair",
+"redhead",
+"closed mouth",
+"smoke",
+"hair over one eye",
+"standing",
+"anime",
+"anime screenshot"
+]
+},
+{
+"name": "wallhaven-xe93pd",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-xe93pd.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-xe93pd.png",
+"keywords": [
+"mrito00",
+"pixiv",
+"clouds",
+"fog",
+"plants",
+"trees",
+"anime girls",
+"sitting",
+"blonde",
+"city",
+"motorcycle",
+"long hair",
+"women outdoors",
+"cigarettes",
+"torn clothes",
+"car",
+"hair accessories",
+"taillights",
+"licence plates",
+"school bus",
+"reflection",
+"building",
+"leaves",
+"purple eyes",
+"parted lips",
+"side view",
+"whole body",
+"buses",
+"architecture",
+"sky",
+"smoking"
+]
+},
+{
+"name": "wallhaven-yqey3l",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-yqey3l.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallhaven-yqey3l.jpg",
+"keywords": [
+"mountain chain",
+"mountains",
+"simon rizzi",
+"landscape",
+"sky",
+"low light",
+"nature",
+"clouds",
+"photography"
+]
+},
+{
+"name": "wallpaper177",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallpaper177.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/wallpaper177.png",
+"keywords": []
+},
+{
+"name": "yandere-1265769",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/yandere-1265769.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/yandere-1265769.jpg",
+"keywords": [
+"aozaki aoko",
+"jpeg artifacts",
+"mahou tsukai no yoru",
+"skirt lift",
+"tagme"
+]
+},
+{
+"name": "yandere-1267798",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/yandere-1267798.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/yandere-1267798.jpg",
+"keywords": [
+"heels",
+"karenina (punishing: gray raven)",
+"punishing: gray raven",
+"stockings",
+"tagme",
+"thighhighs",
+"uniform",
+"weapon"
+]
+},
+{
+"name": "zenless-jane-doe",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/zenless-jane-doe.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/zenless-jane-doe.png",
+"keywords": []
+},
+{
+"name": "zgfbjaw",
+"color": "blue",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/zgfbjaw.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/blue/zgfbjaw.png",
+"keywords": []
+},
+{
+"name": "110",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/110.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/110.png",
+"keywords": []
+},
+{
+"name": "110947747-p0",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/110947747_p0.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/110947747_p0.png",
+"keywords": []
+},
+{
+"name": "111",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/111.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/111.png",
+"keywords": []
+},
+{
+"name": "115",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/115.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/115.png",
+"keywords": []
+},
+{
+"name": "121",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/121.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/121.png",
+"keywords": []
+},
+{
+"name": "124",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/124.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/124.png",
+"keywords": []
+},
+{
+"name": "124929545-p0",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/124929545_p0.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/124929545_p0.png",
+"keywords": []
+},
+{
+"name": "1301131",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/1301131.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/1301131.png",
+"keywords": []
+},
+{
+"name": "133762379-p0",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/133762379_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/133762379_p0.jpg",
+"keywords": []
+},
+{
+"name": "198",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/198.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/198.png",
+"keywords": []
+},
+{
+"name": "1dd7cbaed2974c97e30de647fda8a83e",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/1dd7cbaed2974c97e30de647fda8a83e.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/1dd7cbaed2974c97e30de647fda8a83e.png",
+"keywords": []
+},
+{
+"name": "22",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/22.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/22.png",
+"keywords": []
+},
+{
+"name": "24",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/24.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/24.png",
+"keywords": []
+},
+{
+"name": "33",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/33.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/33.png",
+"keywords": []
+},
+{
+"name": "4kwall-d8w1e3-3840x2160",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/4kwall-d8w1e3-3840x2160.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/4kwall-d8w1e3-3840x2160.png",
+"keywords": []
+},
+{
+"name": "67",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/67.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/67.png",
+"keywords": []
+},
+{
+"name": "78",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/78.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/78.png",
+"keywords": []
+},
+{
+"name": "79721237-p0",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/79721237_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/79721237_p0.jpg",
+"keywords": []
+},
+{
+"name": "81",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/81.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/81.png",
+"keywords": []
+},
+{
+"name": "8130a652e2f58b7d1cb911b53b404392",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/8130a652e2f58b7d1cb911b53b404392.webp",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/8130a652e2f58b7d1cb911b53b404392.webp",
+"keywords": []
+},
+{
+"name": "950bc1c2f85c4b93b0f0f663e4b50271",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/950bc1c2f85c4b93b0f0f663e4b50271.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/950bc1c2f85c4b93b0f0f663e4b50271.png",
+"keywords": []
+},
+{
+"name": "a-cartoon-of-a-woman-with-pink-hair-and-many-camer",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/a-cartoon-of-a-woman-with-pink-hair-and-many-camer.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/a-cartoon-of-a-woman-with-pink-hair-and-many-camer.jpg",
+"keywords": []
+},
+{
+"name": "a-cat-looking-through-a-metal-helmet",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/a-cat-looking-through-a-metal-helmet.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/a-cat-looking-through-a-metal-helmet.png",
+"keywords": []
+},
+{
+"name": "a-cat-standing-in-front-of-a-building",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/a-cat-standing-in-front-of-a-building.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/a-cat-standing-in-front-of-a-building.jpg",
+"keywords": []
+},
+{
+"name": "aeb9uhrbr41a1",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/aeb9uhrbr41a1.webp",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/aeb9uhrbr41a1.webp",
+"keywords": []
+},
+{
+"name": "anime-3",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/anime-3.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/anime-3.png",
+"keywords": []
+},
+{
+"name": "anime-girl-demon-sword-fantasy-warrior-2k-wallpape",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/anime-girl-demon-sword-fantasy-warrior-2k-wallpape.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/anime-girl-demon-sword-fantasy-warrior-2k-wallpape.jpg",
+"keywords": []
+},
+{
+"name": "b4c72bb8365e4a289dd759044dcbf652",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/b4c72bb8365e4a289dd759044dcbf652.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/b4c72bb8365e4a289dd759044dcbf652.png",
+"keywords": []
+},
+{
+"name": "black2",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/black2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/black2.png",
+"keywords": []
+},
+{
+"name": "black3",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/black3.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/black3.png",
+"keywords": []
+},
+{
+"name": "ed88abde14884b8db8e5bebc18fe4c21",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/ed88abde14884b8db8e5bebc18fe4c21.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/ed88abde14884b8db8e5bebc18fe4c21.png",
+"keywords": []
+},
+{
+"name": "fate-artoria-pendragon",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/fate-artoria-pendragon.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/fate-artoria-pendragon.png",
+"keywords": []
+},
+{
+"name": "ff2ad571ca974702cf5cd6b98746fb1f",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/ff2ad571ca974702cf5cd6b98746fb1f.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/ff2ad571ca974702cf5cd6b98746fb1f.png",
+"keywords": []
+},
+{
+"name": "genshin-navia-2",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/genshin-navia-2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/genshin-navia-2.png",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-10",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-10.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-10.jpg",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-5",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-5.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-5.jpg",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-6",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-6.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-6.png",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-7",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-7.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-7.jpg",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-9",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-9.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/hancore-turbonite-9.jpg",
+"keywords": []
+},
+{
+"name": "image-nobara",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/image-nobara.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/image-nobara.png",
+"keywords": []
+},
+{
+"name": "imagem-colada-9",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/imagem-colada-9.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/imagem-colada-9.png",
+"keywords": []
+},
+{
+"name": "knights-radiant",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/knights-radiant.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/knights-radiant.jpg",
+"keywords": []
+},
+{
+"name": "konachan-406226",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/konachan-406226.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/konachan-406226.jpg",
+"keywords": [
+"3d",
+"azur lane",
+"blue eyes",
+"blush",
+"book",
+"bow",
+"coca cola",
+"computer",
+"doll",
+"drink",
+"glasses",
+"gray hair",
+"hood",
+"long hair",
+"original",
+"phone",
+"qys3",
+"saber",
+"shorts",
+"touhou",
+"watermark"
+]
+},
+{
+"name": "konachan-406245",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/konachan-406245.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/konachan-406245.png",
+"keywords": [
+"animal ears",
+"black hair",
+"boots",
+"brown hair",
+"building",
+"bunny ears",
+"dress",
+"garter",
+"gloves",
+"gun",
+"pantyhose",
+"paper",
+"reflection",
+"sena 8ito",
+"water",
+"watermark",
+"weapon"
+]
+},
+{
+"name": "konachan-406439",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/konachan-406439.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/konachan-406439.png",
+"keywords": [
+"boots",
+"bow",
+"brown hair",
+"dust (mth)",
+"earth",
+"indie virtual youtuber",
+"long hair",
+"moon",
+"planet",
+"skirt",
+"space",
+"stars",
+"tagme (character)"
+]
+},
+{
+"name": "konachan-406875",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/konachan-406875.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/konachan-406875.png",
+"keywords": [
+"animal",
+"barefoot",
+"bikini",
+"black hair",
+"breasts",
+"bunny ears",
+"collar",
+"drink",
+"fish",
+"garter",
+"green eyes",
+"leaves",
+"long hair",
+"original",
+"swimsuit",
+"water",
+"wristwear"
+]
+},
+{
+"name": "others-leda",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/others-leda.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/others-leda.png",
+"keywords": []
+},
+{
+"name": "oversized-cat",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/oversized-cat.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/oversized-cat.jpg",
+"keywords": []
+},
+{
+"name": "preto-2",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/preto-2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/preto-2.png",
+"keywords": []
+},
+{
+"name": "railroad-cat",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/railroad-cat.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/railroad-cat.png",
+"keywords": []
+},
+{
+"name": "rainbow-hills",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/rainbow-hills.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/rainbow-hills.png",
+"keywords": []
+},
+{
+"name": "random-wallpaper-2",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/random-wallpaper-2.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/random-wallpaper-2.jpg",
+"keywords": []
+},
+{
+"name": "shadow-shape-holo",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/shadow-shape-holo.jpeg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/shadow-shape-holo.jpeg",
+"keywords": []
+},
+{
+"name": "wallhaven-5y3pd8",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-5y3pd8.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-5y3pd8.png",
+"keywords": [
+"angel",
+"wings",
+"monuments",
+"baroque",
+"italy",
+"gothic",
+"sad",
+"melancholic",
+"classic art",
+"monochrome",
+"low-angle",
+"simple background",
+"rome",
+"centered",
+"short hair",
+"sculpture",
+"robes",
+"gloomy",
+"photography",
+"statue"
+]
+},
+{
+"name": "wallhaven-5yrrl8",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-5yrrl8.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-5yrrl8.jpg",
+"keywords": [
+"juufuutei raden",
+"night",
+"city",
+"hololive",
+"face",
+"looking away",
+"long hair",
+"two tone hair",
+"gloves",
+"black gloves",
+"anime girls",
+"virtual youtuber",
+"choker",
+"parted lips",
+"sparkles",
+"cup",
+"blurry background",
+"closeup",
+"city lights"
+]
+},
+{
+"name": "wallhaven-6lyp2w",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-6lyp2w.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-6lyp2w.png",
+"keywords": [
+"blasphemous",
+"blasphemous ii",
+"penitent one",
+"forest",
+"red",
+"fog",
+"alone",
+"knight",
+"fantasy art",
+"artwork",
+"video games",
+"video game art",
+"trees",
+"standing",
+"men outdoors",
+"dead trees",
+"building"
+]
+},
+{
+"name": "wallhaven-7jez79",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-7jez79.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-7jez79.jpg",
+"keywords": [
+"nature",
+"photography",
+"hills",
+"clouds",
+"grass",
+"watermarked",
+"mountains",
+"eric robert (photographer)",
+"rocks",
+"landscape"
+]
+},
+{
+"name": "wallhaven-9orlxx",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-9orlxx.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-9orlxx.jpg",
+"keywords": [
+"celestra",
+"artstation",
+"women",
+"sitting",
+"sky",
+"clouds",
+"mountains",
+"plants",
+"women outdoors",
+"looking away",
+"anime girls",
+"centered",
+"earphones",
+"trees",
+"signs",
+"hands in pockets",
+"vending machine",
+"kanji",
+"japanese",
+"pointy teeth",
+"glowing eyes",
+"bread",
+"food",
+"grey jacket",
+"legs",
+"hairbun",
+"bench",
+"short hair",
+"parted lips",
+"bus stop",
+"purse"
+]
+},
+{
+"name": "wallhaven-d8owy3",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-d8owy3.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-d8owy3.jpg",
+"keywords": [
+"zenless zone zero",
+"velina airgid (zenless zone zero)",
+"big boobs",
+"cleavage",
+"bangboo (zenless zone zero)",
+"moles",
+"mole on breast",
+"jizaier",
+"video game girls",
+"parted lips",
+"sunlight",
+"mole under mouth",
+"gloves",
+"black gloves",
+"long hair",
+"white hair",
+"purple eyes",
+"pointy ears",
+"clouds",
+"sky",
+"women outdoors",
+"ultrawide",
+"bangs",
+"ahoge",
+"wrist cuffs"
+]
+},
+{
+"name": "wallhaven-e82yek",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-e82yek.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-e82yek.jpg",
+"keywords": [
+"penguln322",
+"digital art",
+"artwork",
+"illustration",
+"digital painting",
+"women",
+"fantasy girl",
+"fantasy art",
+"wings",
+"white wings",
+"angel wings",
+"sword",
+"outdoors",
+"women outdoors",
+"dress",
+"chains",
+"pale",
+"purple dress",
+"armpits",
+"ultrawide",
+"centered",
+"watermarked",
+"thighs",
+"arms up",
+"looking at viewer",
+"parted lips",
+"long hair",
+"women with swords",
+"clouds",
+"sky"
+]
+},
+{
+"name": "wallhaven-gwdj63",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-gwdj63.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-gwdj63.png",
+"keywords": [
+"ada wong",
+"resident evil",
+"video game girls",
+"capcom",
+"resident evil 4 remake",
+"biohazard",
+"short hair",
+"black hair",
+"brown eyes",
+"asian",
+"tank top",
+"jean shorts",
+"thighs",
+"car interior",
+"sitting",
+"looking at viewer",
+"hydrafxx",
+"in a car",
+"steering wheel",
+"car",
+"video game characters",
+"cgi",
+"collarbone",
+"car seat",
+"rearview mirror",
+"juicy lips"
+]
+},
+{
+"name": "wallhaven-jedx95",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-jedx95.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-jedx95.jpg",
+"keywords": [
+"monogatari series",
+"anime girls",
+"artwork",
+"fan art",
+"anime",
+"senjougahara hitagi",
+"looking at viewer",
+"phone",
+"lying down",
+"indoors",
+"solip_ist",
+"lying on back",
+"short hair",
+"parted lips",
+"on the floor",
+"white dress",
+"bow tie",
+"women indoors",
+"brunette",
+"blue eyes",
+"books",
+"collarbone"
+]
+},
+{
+"name": "wallhaven-jeedjw",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-jeedjw.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-jeedjw.jpg",
+"keywords": [
+"hatsune miku",
+"vocaloid",
+"wavy hair",
+"long hair",
+"blue hair",
+"birds",
+"sky",
+"clouds",
+"_glutton_",
+"sunlight",
+"rainbows",
+"black stockings",
+"thighs",
+"stockings",
+"whole body",
+"twintails",
+"open mouth",
+"detached sleeves",
+"smiling",
+"hair between eyes",
+"sun"
+]
+},
+{
+"name": "wallhaven-k81yq6",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-k81yq6.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-k81yq6.jpg",
+"keywords": [
+"bipeng valley",
+"sichuan",
+"landscape",
+"sunlight",
+"sky",
+"clouds",
+"snow",
+"ultrawide",
+"water",
+"photography",
+"nature",
+"trees",
+"lake",
+"ripples"
+]
+},
+{
+"name": "wallhaven-og2g27",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-og2g27.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-og2g27.jpg",
+"keywords": [
+"zenless zone zero",
+"anime",
+"sunna (zenless zone zero)",
+"february",
+"calendar",
+"skindentation",
+"thighs",
+"hair clip",
+"hair accessories",
+"simple background",
+"wings",
+"video game girls",
+"bangs",
+"sweatdrop",
+"closed mouth",
+"long hair",
+"backpacks",
+"cognosphere pte. ltd.",
+"watermarked",
+"kanji",
+"numbers",
+"slouch socks"
+]
+},
+{
+"name": "wallhaven-polerm",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-polerm.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-polerm.jpg",
+"keywords": [
+"broken sun",
+"video games",
+"video game art",
+"digital art",
+"city",
+"citadel",
+"water",
+"watermarked",
+"english",
+"architecture",
+"aerial view",
+"boat",
+"bridge",
+"redneck studio"
+]
+},
+{
+"name": "wallhaven-pom2le",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-pom2le.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-pom2le.png",
+"keywords": [
+"virtuosa (arknights)",
+"arknights",
+"anime",
+"anime girls",
+"whole body",
+"lying down",
+"lying on back",
+"foot sole",
+"pointed toes",
+"looking at viewer",
+"bangs",
+"moles",
+"mole under eye",
+"closed mouth",
+"smiling",
+"black hair",
+"feet in the air",
+"signature",
+"yautja",
+"high heels",
+"black heels",
+"reflection",
+"apples",
+"fruit",
+"legs",
+"thighs",
+"straps",
+"halo",
+"ahoge"
+]
+},
+{
+"name": "wallhaven-qrgqyq",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-qrgqyq.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-qrgqyq.jpg",
+"keywords": [
+"original characters",
+"ultrawide",
+"mountains",
+"subfiction",
+"closed mouth",
+"looking at viewer",
+"trees",
+"rainbows",
+"women outdoors",
+"landscape",
+"short hair",
+"anime girls",
+"field",
+"nature",
+"overcast",
+"tie",
+"centered",
+"sky"
+]
+},
+{
+"name": "wallhaven-rq61dj",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-rq61dj.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-rq61dj.jpg",
+"keywords": [
+"landscape",
+"nature",
+"water",
+"boat",
+"trees",
+"leaves",
+"outdoors",
+"sitting",
+"photography",
+"ultrawide",
+"monochrome",
+"noise"
+]
+},
+{
+"name": "wallhaven-rrxrl1",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-rrxrl1.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-rrxrl1.png",
+"keywords": [
+"bleach",
+"kurosaki ichigo",
+"urahara kisuke",
+"manga",
+"monochrome",
+"anime boys",
+"simple background",
+"anime",
+"umbrella",
+"on the ground",
+"men with hats",
+"hat",
+"rain"
+]
+},
+{
+"name": "wallhaven-v9dx88",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-v9dx88.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-v9dx88.jpg",
+"keywords": [
+"black desert online",
+"4k",
+"women",
+"video game art",
+"video game girls",
+"pearl abyss",
+"shuriken",
+"dagger"
+]
+},
+{
+"name": "wallhaven-vpe73l",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vpe73l.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vpe73l.png",
+"keywords": [
+"sun wukong",
+"video games",
+"black myth: wukong",
+"sky",
+"nature",
+"video game men",
+"video game art",
+"screen shot",
+"video game characters",
+"cgi",
+"landscape",
+"clouds",
+"staff",
+"men outdoors",
+"standing",
+"mountains",
+"warrior",
+"armor",
+"branch",
+"centered"
+]
+},
+{
+"name": "wallhaven-vpel8p",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vpel8p.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vpel8p.jpg",
+"keywords": [
+"nature",
+"forest",
+"fog",
+"castle",
+"sky",
+"landscape",
+"overcast",
+"clouds",
+"trees",
+"green"
+]
+},
+{
+"name": "wallhaven-vpp19p",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vpp19p.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vpp19p.jpg",
+"keywords": [
+"one pixel brush",
+"fantasy art",
+"unreal",
+"volcano",
+"landscape",
+"watermarked",
+"digital art",
+"horseback",
+"army",
+"flag",
+"sky",
+"smoke",
+"eruption",
+"overcast",
+"water",
+"soldier",
+"men"
+]
+},
+{
+"name": "wallhaven-vpqk88",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vpqk88.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vpqk88.png",
+"keywords": [
+"rainbow glare",
+"digital art",
+"purple hair",
+"finger frame",
+"selective coloring",
+"eyes",
+"58 (opal_00_58)",
+"fingers",
+"multi-colored eyes",
+"face",
+"anime girls",
+"long hair",
+"looking at viewer",
+"colorful",
+"hair between eyes",
+"closeup"
+]
+},
+{
+"name": "wallhaven-vqqkk8",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vqqkk8.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-vqqkk8.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-w55zwx",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-w55zwx.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-w55zwx.png",
+"keywords": [
+"dark",
+"monochrome",
+"black",
+"simple background",
+"black background",
+"fingers",
+"hoods",
+"digital art",
+"ultrawide",
+"ai art"
+]
+},
+{
+"name": "wallhaven-xe7vkl",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-xe7vkl.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-xe7vkl.jpg",
+"keywords": [
+"landscape",
+"mountains",
+"snow",
+"sky",
+"clouds",
+"photography",
+"nature",
+"sunset",
+"sunset glow",
+"unsplash"
+]
+},
+{
+"name": "wallhaven-xeeomd",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-xeeomd.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-xeeomd.jpg",
+"keywords": [
+"snow covered",
+"sunset glow",
+"winter",
+"mountains",
+"pine trees",
+"snow tracks",
+"north",
+"snow caps",
+"cold",
+"sky",
+"clouds",
+"landscape",
+"nature"
+]
+},
+{
+"name": "wallhaven-yqg6r7",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-yqg6r7.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallhaven-yqg6r7.jpg",
+"keywords": [
+"harish rajan",
+"digital art",
+"3dsmax",
+"unreal engine 5",
+"cherry blossom",
+"train",
+"house",
+"clouds",
+"sky",
+"utility pole",
+"flowers",
+"daylight",
+"dappled sunlight",
+"japanese",
+"signal",
+"leaves",
+"nature",
+"trees",
+"photoshopped",
+"power lines",
+"window",
+"sunlight",
+"ultrawide",
+"grass",
+"artstation"
+]
+},
+{
+"name": "wallpaper2222",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper2222.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper2222.png",
+"keywords": []
+},
+{
+"name": "wallpaper3315",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper3315.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper3315.png",
+"keywords": []
+},
+{
+"name": "wallpaper3322",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper3322.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper3322.png",
+"keywords": []
+},
+{
+"name": "wallpaper3370",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper3370.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper3370.png",
+"keywords": []
+},
+{
+"name": "wallpaper666",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper666.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper666.png",
+"keywords": []
+},
+{
+"name": "wallpaper806",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper806.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper806.png",
+"keywords": []
+},
+{
+"name": "wallpaper810",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper810.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper810.png",
+"keywords": []
+},
+{
+"name": "wallpaper814",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper814.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wallpaper814.png",
+"keywords": []
+},
+{
+"name": "wanderer",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wanderer.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/wanderer.jpg",
+"keywords": []
+},
+{
+"name": "yandere-1267800",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/yandere-1267800.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/yandere-1267800.jpg",
+"keywords": [
+"karenina (punishing: gray raven)",
+"punishing: gray raven",
+"stockings",
+"tagme",
+"thighhighs",
+"uniform",
+"weapon"
+]
+},
+{
+"name": "zenless-hoshimi-miyabi",
+"color": "gray",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/zenless-hoshimi-miyabi.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/gray/zenless-hoshimi-miyabi.png",
+"keywords": []
+},
+{
+"name": "120523661-p0",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/120523661_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/120523661_p0.jpg",
+"keywords": []
+},
+{
+"name": "23befa96a1674c689e40a2116332d9ea",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/23befa96a1674c689e40a2116332d9ea.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/23befa96a1674c689e40a2116332d9ea.png",
+"keywords": []
+},
+{
+"name": "68747470733a2f2f692e696d6775722e636f6d2f31696f585a",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/68747470733a2f2f692e696d6775722e636f6d2f31696f585a.gif",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/68747470733a2f2f692e696d6775722e636f6d2f31696f585a.gif",
+"keywords": []
+},
+{
+"name": "anime-girl-ninja-katana-dragon-4k-wallpaper-uhdpap",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/anime-girl-ninja-katana-dragon-4k-wallpaper-uhdpap.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/anime-girl-ninja-katana-dragon-4k-wallpaper-uhdpap.jpg",
+"keywords": []
+},
+{
+"name": "dominik-mayer-10",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/dominik-mayer-10.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/dominik-mayer-10.jpg",
+"keywords": []
+},
+{
+"name": "hancore-moodpeak-3",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/hancore-moodpeak-3.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/hancore-moodpeak-3.jpg",
+"keywords": []
+},
+{
+"name": "imagen-no-guardada-2",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/imagen-no-guardada-2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/imagen-no-guardada-2.png",
+"keywords": []
+},
+{
+"name": "iqnsuic",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/iqnsuic.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/iqnsuic.png",
+"keywords": []
+},
+{
+"name": "solo-leveling-kaisel-shadow-dragon-4k-wallpaper-uh",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/solo-leveling-kaisel-shadow-dragon-4k-wallpaper-uh.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/solo-leveling-kaisel-shadow-dragon-4k-wallpaper-uh.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-21yp59",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-21yp59.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-21yp59.jpg",
+"keywords": [
+"philipp a urlich",
+"wide angle",
+"clouds",
+"forest",
+"hills",
+"sky",
+"trees",
+"nature",
+"mountains",
+"landscape",
+"outdoors",
+"scenery"
+]
+},
+{
+"name": "wallhaven-3q2jqy",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-3q2jqy.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-3q2jqy.jpg",
+"keywords": [
+"looking at viewer",
+"rain",
+"nature",
+"blue eyes",
+"blue hair",
+"ultrawide",
+"kawashiro nitori ",
+"touhou",
+"anime girls",
+"side view",
+"looking sideways",
+"leaves",
+"short hair",
+"long sleeves",
+"open mouth",
+"trees",
+"blue clothing",
+"backpacks",
+"hair accessories",
+"frills",
+"women outdoors",
+"forest",
+"siart_design"
+]
+},
+{
+"name": "wallhaven-5yzpe5",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-5yzpe5.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-5yzpe5.jpg",
+"keywords": [
+"abrar khan",
+"digital art",
+"artwork",
+"illustration",
+"cgi",
+"unreal engine 5",
+"ultrawide",
+"wide screen",
+"nature",
+"knight",
+"men",
+"fog",
+"sword",
+"surreal",
+"giant",
+"rock formation"
+]
+},
+{
+"name": "wallhaven-6lye36",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-6lye36.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-6lye36.png",
+"keywords": [
+"fagikakikaki",
+"anime girls",
+"sitting",
+"long hair",
+"pink hair",
+"crow",
+"owl",
+"plants",
+"window",
+"candles",
+"blue eyes",
+"virtual youtuber",
+"animals",
+"wings",
+"hair between eyes",
+"looking away",
+"arm support",
+"two tone hair",
+"balustrade",
+"branch",
+"architecture",
+"birds",
+"women outdoors"
+]
+},
+{
+"name": "wallhaven-gwd91d",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-gwd91d.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-gwd91d.jpg",
+"keywords": [
+"leo (artist)",
+"pixiv",
+"digital art",
+"fantasy art",
+"dragon",
+"creature",
+"ultrawide",
+"fighting",
+"clouds",
+"sunlight",
+"sky",
+"wings",
+"open mouth"
+]
+},
+{
+"name": "wallhaven-lyz6pl",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-lyz6pl.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-lyz6pl.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-qrjxdq",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-qrjxdq.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-qrjxdq.jpg",
+"keywords": [
+"anime",
+"anime girls",
+"sein (artist)",
+"ultrawide",
+"women outdoors",
+"trees",
+"long hair",
+"looking up",
+"pointy ears",
+"headband",
+"blue dress",
+"centered",
+"barefoot",
+"standing",
+"grass",
+"arms up",
+"staff",
+"forest",
+"rain",
+"branch"
+]
+},
+{
+"name": "wallhaven-xe9g8l",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-xe9g8l.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallhaven-xe9g8l.jpg",
+"keywords": [
+"anime girls",
+"anime",
+"arknights",
+"dusk (arknights)",
+"jiong-zi",
+"long hair",
+"red eyes",
+"green hair",
+"alternate costume",
+"sky",
+"clouds",
+"outdoors",
+"horns",
+"pointy ears",
+"hair over one eye",
+"dress",
+"dragon",
+"chinese dragon",
+"ultrawide",
+"long sleeves",
+"looking at viewer",
+"tassels",
+"standing",
+"women outdoors"
+]
+},
+{
+"name": "wallpaper721",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallpaper721.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/wallpaper721.png",
+"keywords": []
+},
+{
+"name": "windows-xp-wallpaper-bliss-4k-wallpaper-1405749316",
+"color": "cyan",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/windows-xp-wallpaper-bliss-4k-wallpaper-1405749316.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/cyan/windows-xp-wallpaper-bliss-4k-wallpaper-1405749316.jpg",
+"keywords": []
+},
+{
+"name": "become-as-god-liquid-dnb-jungle-mix-restricted-int",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/become-as-god-liquid-dnb-jungle-mix-restricted-int.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/become-as-god-liquid-dnb-jungle-mix-restricted-int.png",
+"keywords": []
+},
+{
+"name": "green-peace",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/green-peace.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/green-peace.png",
+"keywords": []
+},
+{
+"name": "green",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/green.jpeg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/green.jpeg",
+"keywords": []
+},
+{
+"name": "wallhaven-1qxxkg",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-1qxxkg.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-1qxxkg.png",
+"keywords": [
+"chainsaw man 2",
+"anime boys",
+"shonen jump",
+"denji (chainsaw man)",
+"pointy teeth",
+"colorful",
+"chainsaw man",
+"ultrawide",
+"open mouth",
+"chainsaws",
+"selective coloring",
+"closeup",
+"cropped"
+]
+},
+{
+"name": "wallhaven-3qqqkv",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-3qqqkv.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-3qqqkv.jpg",
+"keywords": [
+"creatiflux",
+"digital art",
+"artwork",
+"illustration",
+"futuristic",
+"technology",
+"interior",
+"indoors",
+"screens",
+"computer",
+"keyboards",
+"code",
+"cgi",
+"interfaces",
+"tools",
+"arch linux",
+"linux",
+"messy",
+"monitor"
+]
+},
+{
+"name": "wallhaven-8gj3ky",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-8gj3ky.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-8gj3ky.jpg",
+"keywords": [
+"luzhou zzz",
+"anime girls",
+"underwater",
+"picnic basket",
+"white shirt",
+"closed mouth",
+"white skirt",
+"water lilies",
+"fish",
+"water",
+"koi",
+"whole body",
+"bent legs",
+"black hair",
+"bare midriff",
+"blue eyes",
+"straight hair",
+"short sleeves",
+"shoe sole",
+"painted toenails",
+"baskets",
+"submerged",
+"foot sole",
+"ultrawide",
+"animals"
+]
+},
+{
+"name": "wallhaven-d838pm",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-d838pm.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-d838pm.png",
+"keywords": []
+},
+{
+"name": "wallhaven-ml2wj8",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-ml2wj8.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-ml2wj8.jpg",
+"keywords": [
+"amazing aerial agency",
+"skradinski buk waterfall",
+"croatia",
+"nature",
+"landscape",
+"trees",
+"foliage",
+"bridge",
+"rocks",
+"aerial view",
+"drone photo",
+"water",
+"green",
+"bing",
+"top view",
+"waterfall"
+]
+},
+{
+"name": "wallhaven-qrgg2l",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-qrgg2l.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-qrgg2l.jpg",
+"keywords": [
+"chainsaw man",
+"anime girls",
+"yoru (chainsaw man)",
+"reze (chainsaw man)",
+"denji (chainsaw man)",
+"chainsaw man 2",
+"short hair",
+"shonen jump",
+"cigarettes",
+"anime boys",
+"closed eyes",
+"eyepatches",
+"looking away",
+"moles",
+"mole under eye",
+"mole under mouth",
+"tie",
+"rolled sleeves",
+"centered",
+"heterochromia",
+"sweater",
+"sim chan (hojo)",
+"bright"
+]
+},
+{
+"name": "wallhaven-rqod21",
+"color": "green",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-rqod21.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/green/wallhaven-rqod21.png",
+"keywords": [
+"planet of lana ii",
+"forest",
+"trees",
+"nature",
+"green",
+"video game art",
+"screen shot",
+"video games",
+"sunlight",
+"sun rays",
+"leaves",
+"plants"
+]
+},
+{
+"name": "124110783-p0",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/124110783_p0.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/124110783_p0.png",
+"keywords": []
+},
+{
+"name": "1260830",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/1260830.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/1260830.jpg",
+"keywords": []
+},
+{
+"name": "137722971-p0",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/137722971_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/137722971_p0.jpg",
+"keywords": []
+},
+{
+"name": "3",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/3.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/3.png",
+"keywords": []
+},
+{
+"name": "817623",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/817623.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/817623.jpg",
+"keywords": []
+},
+{
+"name": "82479c589f94f7dbe2ad57474cd3a6b2",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/82479c589f94f7dbe2ad57474cd3a6b2.webp",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/82479c589f94f7dbe2ad57474cd3a6b2.webp",
+"keywords": []
+},
+{
+"name": "93165067-p1",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/93165067_p1.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/93165067_p1.jpg",
+"keywords": []
+},
+{
+"name": "angel1",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/angel1.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/angel1.png",
+"keywords": []
+},
+{
+"name": "batman-arkham-3840x2160-18364",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/batman-arkham-3840x2160-18364.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/batman-arkham-3840x2160-18364.jpg",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers1",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/by-discord-ggwallpapers1.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/by-discord-ggwallpapers1.png",
+"keywords": []
+},
+{
+"name": "dominik-mayer-17",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/dominik-mayer-17.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/dominik-mayer-17.jpg",
+"keywords": []
+},
+{
+"name": "gfkobulakaaqyiz",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gfkobulakaaqyiz.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gfkobulakaaqyiz.jpg",
+"keywords": []
+},
+{
+"name": "gnupexqaaaa3i-z",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gnupexqaaaa3i-z.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gnupexqaaaa3i-z.jpg",
+"keywords": []
+},
+{
+"name": "gruglh4asaalkm8",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gruglh4asaalkm8.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gruglh4asaalkm8.jpg",
+"keywords": []
+},
+{
+"name": "gvlu6nza0aaeow",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gvlu6nza0aaeow.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gvlu6nza0aaeow.jpg",
+"keywords": []
+},
+{
+"name": "gyurrjia4aa2llj",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gyurrjia4aa2llj.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/gyurrjia4aa2llj.jpg",
+"keywords": []
+},
+{
+"name": "hancore-turbonite-11",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/hancore-turbonite-11.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/hancore-turbonite-11.jpg",
+"keywords": []
+},
+{
+"name": "knight-sit",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/knight-sit.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/knight-sit.png",
+"keywords": []
+},
+{
+"name": "konachan-406745",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/konachan-406745.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/konachan-406745.jpg",
+"keywords": [
+"black hair",
+"breasts",
+"cleavage",
+"dress",
+"garter",
+"gloves",
+"instrument",
+"paper",
+"petals",
+"piano",
+"realistic",
+"red eyes",
+"silver palace",
+"ui uiiiiiiiii",
+"watermark"
+]
+},
+{
+"name": "konachan-407004",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/konachan-407004.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/konachan-407004.jpg",
+"keywords": [
+"black hair",
+"breasts",
+"building",
+"cleavage",
+"couch",
+"dress",
+"haruri",
+"long hair",
+"necklace",
+"red eyes",
+"see through",
+"spread legs",
+"tagme (character)",
+"watermark"
+]
+},
+{
+"name": "konachan-407390",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/konachan-407390.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/konachan-407390.png",
+"keywords": [
+"black hair",
+"blush",
+"bow",
+"breasts",
+"bunny ears",
+"bunnygirl",
+"cleavage",
+"garter",
+"headband",
+"leotard",
+"long hair",
+"nicky w",
+"pantyhose",
+"skintight",
+"wink",
+"wristwear",
+"yellow eyes"
+]
+},
+{
+"name": "sunset-drive-forest",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/sunset-drive-forest.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/sunset-drive-forest.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-211xrg",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-211xrg.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-211xrg.jpg",
+"keywords": [
+"landscape",
+"mountains",
+"rocks",
+"nature",
+"sky",
+"marek piwnicki",
+"sunset",
+"photography",
+"sunset glow",
+"unsplash"
+]
+},
+{
+"name": "wallhaven-3q5lmy",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-3q5lmy.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-3q5lmy.jpg",
+"keywords": [
+"digital art",
+"stars",
+"space",
+"simple background",
+"supermassive black hole",
+"dark background",
+"glowing",
+"space art",
+"event horizon",
+"ultrawide"
+]
+},
+{
+"name": "wallhaven-5y3895",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-5y3895.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-5y3895.png",
+"keywords": [
+"zaraki kenpachi",
+"bleach",
+"upscaled",
+"screen shot",
+"anime",
+"anime boys",
+"demon",
+"horns",
+"teeth",
+"sword",
+"men with swords",
+"flying",
+"clenched teeth"
+]
+},
+{
+"name": "wallhaven-7jr7gv",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-7jr7gv.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-7jr7gv.jpg",
+"keywords": [
+"pierre deschamps",
+"artstation",
+"dragon",
+"fire",
+"medieval",
+"wings",
+"ultrawide",
+"fantasy art",
+"digital art",
+"creature",
+"open mouth",
+"signature",
+"smoke",
+"low light"
+]
+},
+{
+"name": "wallhaven-e86m9o",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-e86m9o.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-e86m9o.jpg",
+"keywords": [
+"the odyssey (2026)",
+"christopher nolan",
+"iliad",
+"film stills",
+"movies",
+"ultrawide",
+"horse",
+"water",
+"waves",
+"sky",
+"sea",
+"animals",
+"statue"
+]
+},
+{
+"name": "wallhaven-e883zo",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-e883zo.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-e883zo.jpg",
+"keywords": [
+"augusta (wuthering waves)",
+"wuthering waves",
+"earring",
+"armor",
+"headgear",
+"solo",
+"clouds",
+"outdoors",
+"illustration",
+"sword",
+"holding sword",
+"jewelry",
+"necklace",
+"hair blowing in the wind",
+"grass",
+"breastplate",
+"redhead",
+"greatsword",
+"looking sideways",
+"birds",
+"long hair",
+"american shot",
+"jvndraws",
+"cleavage",
+"sunset",
+"stars",
+"sky",
+"women outdoors",
+"sunlight"
+]
+},
+{
+"name": "wallhaven-gwpgv3",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-gwpgv3.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-gwpgv3.jpg",
+"keywords": [
+"wlop",
+"digital art",
+"artwork",
+"illustration",
+"digital painting",
+"people",
+"group of people",
+"nature",
+"clouds",
+"leaves",
+"sunset",
+"plants",
+"wind",
+"sky",
+"men",
+"women",
+"kimono",
+"sunlight",
+"samurai",
+"side view",
+"cloudinsect (wlop)",
+"suvan (cloudinsect)",
+"mahina (cloudinsect)"
+]
+},
+{
+"name": "wallhaven-gwwdm3",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-gwwdm3.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-gwwdm3.png",
+"keywords": [
+"intergalactic",
+"ultrawide",
+"simple background",
+"space",
+"planet",
+"gravity",
+"black background",
+"glowing",
+"astronomy",
+"black holes",
+"space art"
+]
+},
+{
+"name": "wallhaven-jee86m",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-jee86m.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-jee86m.jpg",
+"keywords": [
+"leo (artist)",
+"illustration",
+"grass",
+"women",
+"back",
+"wide screen",
+"dragon tattoo",
+"long hair",
+"bare shoulders",
+"sunset",
+"braids",
+"solo",
+"weapon",
+"women outdoors",
+"women with swords",
+"sword",
+"chinese dragon",
+"standing",
+"side view",
+"ponytail",
+"field",
+"arched back",
+"digital art"
+]
+},
+{
+"name": "wallhaven-ly2yg2",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-ly2yg2.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-ly2yg2.jpg",
+"keywords": [
+"monkey d. luffy",
+"anime",
+"one piece",
+"anime boys",
+"thousand sunny",
+"gear 5th",
+"kozuki momonosuke",
+"straw hat",
+"closed eyes",
+"simple background",
+"moon",
+"black background",
+"scars",
+"white hair",
+"short hair",
+"stars",
+"chinese dragon",
+"thick eyebrows",
+"ship",
+"glowing",
+"upscaled"
+]
+},
+{
+"name": "wallhaven-lyjvl2",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-lyjvl2.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-lyjvl2.jpg",
+"keywords": [
+"anime",
+"anime girls",
+"frieren",
+"sousou no frieren",
+"fern (sousou no frieren)",
+"breaking bad",
+"beer",
+"potato chips",
+"couch",
+"table",
+"remote control",
+"face mask",
+"blonde",
+"purple hair",
+"long hair",
+"green eyes",
+"pointy ears",
+"purple eyes",
+"earring",
+"tv remote",
+"legs crossed",
+"chill out",
+"relaxation",
+"relaxing",
+"digital art",
+"humor",
+"crossover",
+"elf girl",
+"two women",
+"outfit swap",
+"shoe sole",
+"women indoors",
+"sitting",
+"bowls",
+"drink",
+"smiling",
+"thick eyebrows",
+"bangs",
+"white clothing",
+"curtains",
+"collarbone",
+"feet crossed",
+"craizuss",
+"long sleeves"
+]
+},
+{
+"name": "wallhaven-lyk5eq",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-lyk5eq.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-lyk5eq.jpg",
+"keywords": [
+"nature",
+"clear sky",
+"sunlight",
+"landscape",
+"trees",
+"mountains",
+"snow",
+"mount whitney"
+]
+},
+{
+"name": "wallhaven-ml3prm",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-ml3prm.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-ml3prm.jpg",
+"keywords": [
+"anime girls",
+"red eyes",
+"red",
+"black hair",
+"japanese art",
+"manga",
+"flowers",
+"kanji",
+"face",
+"closed mouth",
+"long hair",
+"looking at viewer",
+"bangs",
+"painted nails",
+"long nails",
+"leaves",
+"washiya0",
+"lying down"
+]
+},
+{
+"name": "wallhaven-po7m99",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-po7m99.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-po7m99.jpg",
+"keywords": [
+"hsin (wuthering waves)",
+"wuthering waves",
+"dress",
+"video game girls",
+"high heels",
+"whole body",
+"centered",
+"moonlight",
+"full moon",
+"ripples",
+"candles",
+"sky",
+"water",
+"water drops",
+"leaves",
+"women outdoors",
+"hair accessories",
+"back",
+"detached sleeves",
+"animals"
+]
+},
+{
+"name": "wallhaven-qro57d",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-qro57d.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-qro57d.jpg",
+"keywords": [
+"porforever",
+"original characters",
+"fantasy art",
+"plants",
+"trees",
+"white hair",
+"women",
+"men",
+"standing",
+"knight",
+"fantasy girl",
+"fantasy men",
+"female warrior",
+"horns",
+"hair between eyes",
+"bangs",
+"glowing eyes",
+"red eyes",
+"women outdoors",
+"armor",
+"long hair",
+"open mouth",
+"glowing",
+"gloves"
+]
+},
+{
+"name": "wallhaven-yqgk6g",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-yqgk6g.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallhaven-yqgk6g.png",
+"keywords": [
+"gruvbox theme",
+"solar system",
+"space art",
+"simple background",
+"sun",
+"mercury",
+"venus",
+"earth",
+"moon",
+"mars",
+"comet",
+"circle",
+"stars",
+"digital art",
+"ultrawide"
+]
+},
+{
+"name": "wallpaper697",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallpaper697.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wallpaper697.png",
+"keywords": []
+},
+{
+"name": "wp14205513-berserk-armour-desktop-wallpapers",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wp14205513-berserk-armour-desktop-wallpapers.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/wp14205513-berserk-armour-desktop-wallpapers.png",
+"keywords": []
+},
+{
+"name": "yandere-1267814",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/yandere-1267814.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/yandere-1267814.jpg",
+"keywords": [
+"armor",
+"punishing: gray raven",
+"tagme"
+]
+},
+{
+"name": "yohoho",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/yohoho.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/yohoho.jpg",
+"keywords": []
+},
+{
+"name": "zzzzz",
+"color": "orange",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/zzzzz.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/orange/zzzzz.png",
+"keywords": []
+},
+{
+"name": "035b2dc3c23c40479a7671b6377eedc5",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/035b2dc3c23c40479a7671b6377eedc5.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/035b2dc3c23c40479a7671b6377eedc5.png",
+"keywords": []
+},
+{
+"name": "0603d398cfb2bb0d2f3ad6c5d8eed54b",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/0603d398cfb2bb0d2f3ad6c5d8eed54b.webp",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/0603d398cfb2bb0d2f3ad6c5d8eed54b.webp",
+"keywords": []
+},
+{
+"name": "discordggwallpapers",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/discordggwallpapers.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/discordggwallpapers.png",
+"keywords": []
+},
+{
+"name": "konachan-405772",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/konachan-405772.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/konachan-405772.jpg",
+"keywords": [
+"blood",
+"breasts",
+"cleavage",
+"clouds",
+"cross",
+"dress",
+"eversoul",
+"gloves",
+"long hair",
+"moon",
+"night",
+"rain",
+"red eyes",
+"red hair",
+"sky",
+"stars",
+"thighhighs",
+"water",
+"watermark",
+"wet"
+]
+},
+{
+"name": "raiden-shogun-neon-5120x2880-20921",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/raiden-shogun-neon-5120x2880-20921.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/raiden-shogun-neon-5120x2880-20921.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-212z9g",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-212z9g.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-212z9g.jpg",
+"keywords": [
+"zenless zone zero",
+"remielle dan (zenless zone zero)",
+"zzzzzm jiangzhouzi",
+"wings",
+"video game girls",
+"back",
+"short hair",
+"pink hair",
+"hair bows",
+"whole body",
+"legs crossed",
+"stockings",
+"black stockings",
+"birds",
+"feathers",
+"dress",
+"sky",
+"clouds",
+"looking at viewer",
+"looking over shoulder",
+"pink eyes",
+"closed mouth",
+"smiling",
+"high heels",
+"black heels",
+"city lights",
+"arched back",
+"thighs",
+"upscaled"
+]
+},
+{
+"name": "wallhaven-3qrle6",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-3qrle6.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-3qrle6.png",
+"keywords": [
+"anime",
+"anime girls",
+"neverness to everness",
+"shinku (neverness to everness)",
+"two tone hair",
+"long hair",
+"symbol-shaped pupils",
+"hair between eyes",
+"horns",
+"closed mouth",
+"pink eyes",
+"anime games",
+"ultrawide",
+"fighting",
+"looking at viewer",
+"high-angle",
+"thigh strap",
+"bare midriff",
+"fingers",
+"hir0nohir0"
+]
+},
+{
+"name": "wallhaven-5ykjq7",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-5ykjq7.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-5ykjq7.jpg",
+"keywords": [
+"tatooine1986",
+"digital art",
+"artwork",
+"illustration",
+"digital painting",
+"women",
+"short hair",
+"white hair",
+"white tops",
+"choker",
+"necklace",
+"blue eyes",
+"moles",
+"mole under eye",
+"open mouth",
+"tongue out",
+"portrait",
+"portrait display",
+"black bras",
+"pierced lip",
+"collarbone",
+"juicy lips",
+"long nails",
+"red nails",
+"painted nails",
+"head tilt",
+"looking at viewer",
+"bra",
+"1993 (year)",
+"fake nails"
+]
+},
+{
+"name": "wallhaven-e8w5wo",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-e8w5wo.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-e8w5wo.jpg",
+"keywords": [
+"anime girls",
+"purple hair",
+"topless",
+"japanese",
+"flowers",
+"blue eyes",
+"reze (chainsaw man)",
+"chainsaw man",
+"smiling",
+"one arm up",
+"armpits",
+"lying down",
+"lying on back",
+"one eye closed",
+"grass",
+"petals",
+"looking at viewer",
+"short hair",
+"portrait display",
+"crossover",
+"clash of clans",
+"nature"
+]
+},
+{
+"name": "wallhaven-jewvzy",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-jewvzy.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-jewvzy.jpg",
+"keywords": [
+"neon genesis evangelion",
+"ayanami rei",
+"plugsuit",
+"blue hair",
+"anime girls",
+"bandages",
+"aquarium",
+"fish",
+"fish tank",
+"side view",
+"red eyes",
+"ultrawide",
+"short hair",
+"standing",
+"closed mouth",
+"bodysuit",
+"animals"
+]
+},
+{
+"name": "wallhaven-k8kk7d",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-k8kk7d.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-k8kk7d.png",
+"keywords": [
+"chainsaw man",
+"anime girls",
+"yoru (chainsaw man)",
+"shonen jump",
+"two women",
+"chainsaw man 2",
+"long hair",
+"simple background",
+"scars",
+"frontal view",
+"sweat",
+"ringed eyes",
+"closeup",
+"black hair",
+"smiling",
+"manga",
+"looking at viewer"
+]
+},
+{
+"name": "wallhaven-lydoqr",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-lydoqr.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-lydoqr.png",
+"keywords": [
+"wuthering waves",
+"qingxiao (wuthering waves)",
+"video game characters",
+"screen shot",
+"video game art",
+"upscaled",
+"ai art"
+]
+},
+{
+"name": "wallhaven-odqwq9",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-odqwq9.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-odqwq9.png",
+"keywords": [
+"anime",
+"anime girls",
+"fantasy girl",
+"sword",
+"dark hair",
+"simple background",
+"red background",
+"long hair",
+"weapon",
+"unohana retsu",
+"bleach"
+]
+},
+{
+"name": "wallhaven-yq9z1x",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-yq9z1x.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-yq9z1x.png",
+"keywords": [
+"anime girls",
+"hiroki ree",
+"original characters",
+"simple background",
+"solo",
+"brown eyes",
+"looking away",
+"gradient",
+"gloves",
+"two tone hair",
+"weapon",
+"headphones",
+"black gloves",
+"glasses",
+"fingerless gloves",
+"assault rifle",
+"scopes",
+"aiming",
+"anime",
+"ultrawide",
+"black hair",
+"girls with guns",
+"side view",
+"black nails",
+"straps",
+"long sleeves",
+"closed mouth",
+"focused"
+]
+},
+{
+"name": "wallhaven-zyk1mo",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-zyk1mo.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallhaven-zyk1mo.png",
+"keywords": [
+"bleach",
+"unohana retsu",
+"smiling",
+"black hair",
+"looking at viewer",
+"anime",
+"anime girls",
+"hair on face",
+"long hair",
+"kimono",
+"women with swords",
+"katana",
+"closed mouth",
+"red eyes",
+"frontal view",
+"blurry background",
+"blood",
+"upscaled"
+]
+},
+{
+"name": "wallpaperflare-com-wallpaper123",
+"color": "pink",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallpaperflare-com-wallpaper123.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/pink/wallpaperflare-com-wallpaper123.jpg",
+"keywords": []
+},
+{
+"name": "1362745",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/1362745.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/1362745.png",
+"keywords": []
+},
+{
+"name": "219",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/219.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/219.png",
+"keywords": []
+},
+{
+"name": "anime-2",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/anime-2.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/anime-2.jpg",
+"keywords": []
+},
+{
+"name": "anime-girl-mask-assassin-knife-4k-wallpaper-uhdpap",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/anime-girl-mask-assassin-knife-4k-wallpaper-uhdpap.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/anime-girl-mask-assassin-knife-4k-wallpaper-uhdpap.jpg",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers66",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/by-discord-ggwallpapers66.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/by-discord-ggwallpapers66.png",
+"keywords": []
+},
+{
+"name": "chess-gate",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/chess-gate.jpeg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/chess-gate.jpeg",
+"keywords": []
+},
+{
+"name": "fondo31",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/fondo31.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/fondo31.png",
+"keywords": []
+},
+{
+"name": "mlizwnj",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/mlizwnj.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/mlizwnj.png",
+"keywords": []
+},
+{
+"name": "new-ryoku-walls-v0-jk6dv9e00s2h1",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/new-ryoku-walls-v0-jk6dv9e00s2h1.webp",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/new-ryoku-walls-v0-jk6dv9e00s2h1.webp",
+"keywords": []
+},
+{
+"name": "ship-2",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/ship-2.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/ship-2.png",
+"keywords": []
+},
+{
+"name": "wallhaven-8geypo",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-8geypo.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-8geypo.png",
+"keywords": [
+"kurzgesagt – in a nutshell",
+"space art",
+"galaxy",
+"simple background",
+"stars",
+"glowing",
+"centered",
+"digital art",
+"space"
+]
+},
+{
+"name": "wallhaven-e827zw",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-e827zw.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-e827zw.png",
+"keywords": [
+"the first berserker: khazan",
+"video game art",
+"cgi",
+"umbrella",
+"dragon",
+"video game characters",
+"hair between eyes",
+"redhead",
+"video game girls",
+"standing",
+"closed eyes",
+"long hair",
+"witch hat",
+"closeup",
+"video games",
+"closed mouth",
+"screen shot",
+"bracelets"
+]
+},
+{
+"name": "wallhaven-jeej1q",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-jeej1q.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-jeej1q.jpg",
+"keywords": [
+"brian connelly",
+"fantasy art",
+"deer",
+"animals",
+"grass",
+"nature",
+"trees",
+"dark",
+"fire",
+"lights",
+"forest",
+"digital art",
+"mist",
+"fog",
+"ultrawide",
+"glowing"
+]
+},
+{
+"name": "wallhaven-jey1qy",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-jey1qy.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-jey1qy.jpg",
+"keywords": [
+"zenless zone zero",
+"zhu yuan (zenless zone zero)",
+"looking at viewer",
+"title",
+"closed mouth",
+"sushispin",
+"video game girls",
+"short hair",
+"two tone hair",
+"red eyes",
+"police women",
+"motion blur",
+"ultrawide",
+"thigh strap",
+"blurry background",
+"badge"
+]
+},
+{
+"name": "wallhaven-qrgvll",
+"color": "purple",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-qrgvll.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/purple/wallhaven-qrgvll.png",
+"keywords": [
+"digital art",
+"illustration",
+"space",
+"stars",
+"planet",
+"milky way",
+"galaxy",
+"astronaut",
+"centered",
+"simple background",
+"text",
+"japanese",
+"english"
+]
+},
+{
+"name": "1298385",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/1298385.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/1298385.jpg",
+"keywords": []
+},
+{
+"name": "132704739-p0",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/132704739_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/132704739_p0.jpg",
+"keywords": []
+},
+{
+"name": "136268202-p0",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/136268202_p0.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/136268202_p0.png",
+"keywords": []
+},
+{
+"name": "2b708e21c7dd429a8f811cfa11acf279",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/2b708e21c7dd429a8f811cfa11acf279.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/2b708e21c7dd429a8f811cfa11acf279.png",
+"keywords": []
+},
+{
+"name": "4a2497cb69e34e6da3db941c605eff2a",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/4a2497cb69e34e6da3db941c605eff2a.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/4a2497cb69e34e6da3db941c605eff2a.png",
+"keywords": []
+},
+{
+"name": "4e6ca24bf64b4b9ff924e48c19708e84",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/4e6ca24bf64b4b9ff924e48c19708e84.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/4e6ca24bf64b4b9ff924e48c19708e84.png",
+"keywords": []
+},
+{
+"name": "7932987f1f234990b94168d7139fae26",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/7932987f1f234990b94168d7139fae26.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/7932987f1f234990b94168d7139fae26.png",
+"keywords": []
+},
+{
+"name": "98904035-p0",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/98904035_p0.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/98904035_p0.jpg",
+"keywords": []
+},
+{
+"name": "a-cartoon-of-a-girl-with-long-hair-wearing-a-black",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/a-cartoon-of-a-girl-with-long-hair-wearing-a-black.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/a-cartoon-of-a-girl-with-long-hair-wearing-a-black.png",
+"keywords": []
+},
+{
+"name": "anime-girl-red-eyes-tattoo-4k-wallpaper-uhdpaper-c",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/anime-girl-red-eyes-tattoo-4k-wallpaper-uhdpaper-c.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/anime-girl-red-eyes-tattoo-4k-wallpaper-uhdpaper-c.jpg",
+"keywords": []
+},
+{
+"name": "anime-girl-tattoo-white-hair-4k-wallpaper-uhdpaper",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/anime-girl-tattoo-white-hair-4k-wallpaper-uhdpaper.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/anime-girl-tattoo-white-hair-4k-wallpaper-uhdpaper.jpg",
+"keywords": []
+},
+{
+"name": "arknight-entelechia",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/arknight-entelechia.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/arknight-entelechia.png",
+"keywords": []
+},
+{
+"name": "b9493baee1ae48a3f27fa7780ddf9375",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/b9493baee1ae48a3f27fa7780ddf9375.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/b9493baee1ae48a3f27fa7780ddf9375.png",
+"keywords": []
+},
+{
+"name": "by-discord-ggwallpapers4",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/by-discord-ggwallpapers4.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/by-discord-ggwallpapers4.png",
+"keywords": []
+},
+{
+"name": "devil-anime-girl-3840x2160-19267",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/devil-anime-girl-3840x2160-19267.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/devil-anime-girl-3840x2160-19267.jpg",
+"keywords": []
+},
+{
+"name": "dominik-mayer-24",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/dominik-mayer-24.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/dominik-mayer-24.jpg",
+"keywords": []
+},
+{
+"name": "f5u9l4iagaacmdb",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/f5u9l4iagaacmdb.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/f5u9l4iagaacmdb.jpg",
+"keywords": []
+},
+{
+"name": "f7179f234208459bbd949d51b33f644f",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/f7179f234208459bbd949d51b33f644f.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/f7179f234208459bbd949d51b33f644f.png",
+"keywords": []
+},
+{
+"name": "gfjxoavboaaeejy",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/gfjxoavboaaeejy.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/gfjxoavboaaeejy.jpg",
+"keywords": []
+},
+{
+"name": "gu0t9o7x0aa-1ih",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/gu0t9o7x0aa-1ih.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/gu0t9o7x0aa-1ih.jpg",
+"keywords": []
+},
+{
+"name": "gvz3qijbyaaymry",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/gvz3qijbyaaymry.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/gvz3qijbyaaymry.jpg",
+"keywords": []
+},
+{
+"name": "gz7iqlda8aa7ez1",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/gz7iqlda8aa7ez1.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/gz7iqlda8aa7ez1.jpg",
+"keywords": []
+},
+{
+"name": "kaiju",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/kaiju.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/kaiju.png",
+"keywords": []
+},
+{
+"name": "konachan-407243",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/konachan-407243.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/konachan-407243.png",
+"keywords": [
+"bed",
+"black eyes",
+"black hair",
+"book",
+"bra",
+"breasts",
+"cleavage",
+"close",
+"hashimoto kokai",
+"long hair",
+"navel",
+"original",
+"shorts",
+"underwear"
+]
+},
+{
+"name": "konachan-407561",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/konachan-407561.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/konachan-407561.png",
+"keywords": [
+"arlecchino (genshin impact)",
+"black eyes",
+"genshin impact",
+"gloves",
+"gray hair",
+"kozakura (dictionary)",
+"long hair",
+"magic",
+"ponytail",
+"signed",
+"wings"
+]
+},
+{
+"name": "mxbpbzp",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/mxbpbzp.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/mxbpbzp.png",
+"keywords": []
+},
+{
+"name": "requacvestproguild",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/requacvestproguild.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/requacvestproguild.png",
+"keywords": []
+},
+{
+"name": "wallhaven-6lyde6",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-6lyde6.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-6lyde6.png",
+"keywords": [
+"hu tao (genshin impact)",
+"video games",
+"anime girls",
+"ofuda",
+"nail polish",
+"mouth hold",
+"cleavage",
+"genshin impact",
+"sushispin",
+"looking at viewer",
+"hands",
+"hair between eyes",
+"rings",
+"symbol-shaped pupils",
+"brunette",
+"red eyes",
+"red nails",
+"painted nails",
+"cleavage cutout",
+"big boobs",
+"hair accessories",
+"long hair",
+"detached sleeves",
+"tassels",
+"asian clothing",
+"ghost",
+"bracelets",
+"arms up"
+]
+},
+{
+"name": "wallhaven-e8wl9o",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-e8wl9o.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-e8wl9o.jpg",
+"keywords": [
+"black metal",
+"band logo",
+"album covers",
+"cover art",
+"digital art",
+"centered",
+"horns",
+"kanji",
+"face",
+"skull",
+"oni",
+"hair accessories",
+"water",
+"waves",
+"red",
+"frontal view",
+"red lipstick"
+]
+},
+{
+"name": "wallhaven-lydqdp",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-lydqdp.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-lydqdp.jpg",
+"keywords": [
+"cosplay",
+"anastasia komori",
+"model",
+"spy x family",
+"yor forger",
+"brunette",
+"minidress",
+"black dress",
+"anime girls",
+"women",
+"leather dress",
+"anime",
+"standing",
+"women indoors",
+"legs",
+"red eyes",
+"open dress",
+"orange eyes"
+]
+},
+{
+"name": "wallhaven-mly6vy",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-mly6vy.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-mly6vy.jpg",
+"keywords": [
+"bleach",
+"kurosaki ichigo",
+"upscaled",
+"closeup",
+"simple background",
+"anime",
+"screen shot",
+"parted lips",
+"looking at viewer",
+"horns",
+"short hair",
+"yellow eyes",
+"red background",
+"glowing",
+"anime boys",
+"looking back"
+]
+},
+{
+"name": "wallhaven-vpylkm",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-vpylkm.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-vpylkm.png",
+"keywords": [
+"dorohedoro",
+"shin (dorohedoro)",
+"mask",
+"heart",
+"illustration",
+"digital art",
+"anime",
+"blood",
+"hammer",
+"fingers",
+"looking at viewer",
+"one eye obstructed",
+"hands",
+"closeup",
+"anime boys"
+]
+},
+{
+"name": "wallhaven-vpyqm8",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-vpyqm8.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-vpyqm8.jpg",
+"keywords": [
+"abstract",
+"vertical lines",
+"digital art",
+"colorful",
+"simple background",
+"glass"
+]
+},
+{
+"name": "wallhaven-x6p3ll",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-x6p3ll.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-x6p3ll.png",
+"keywords": [
+"guts (berserk)",
+"berserk",
+"berserk armor",
+"berserker",
+"manga",
+"armor",
+"anime boys",
+"sword"
+]
+},
+{
+"name": "wallhaven-xe6qdv",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-xe6qdv.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallhaven-xe6qdv.png",
+"keywords": [
+"reuben wu",
+"punta helbronner",
+"alps",
+"photography",
+"sunrise",
+"mountains",
+"snow",
+"landscape",
+"surreal",
+"nature",
+"cable car",
+"red moon",
+"sky",
+"moon"
+]
+},
+{
+"name": "wallpaper2106",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallpaper2106.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallpaper2106.png",
+"keywords": []
+},
+{
+"name": "wallpaper3198",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallpaper3198.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wallpaper3198.png",
+"keywords": []
+},
+{
+"name": "wuthering-yinlin",
+"color": "red",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wuthering-yinlin.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/red/wuthering-yinlin.png",
+"keywords": []
+},
+{
+"name": "dominik-mayer-6",
+"color": "white",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/white/dominik-mayer-6.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/white/dominik-mayer-6.jpg",
+"keywords": []
+},
+{
+"name": "wallhaven-5y3vx7",
+"color": "white",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/white/wallhaven-5y3vx7.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/white/wallhaven-5y3vx7.png",
+"keywords": [
+"nintendo",
+"nintendo game boy",
+"wireframe",
+"blueprints",
+"console game",
+"consoles",
+"retro console",
+"text",
+"logo",
+"video game art",
+"retro games",
+"vintage",
+"controllers",
+"video games",
+"simple background",
+"bright",
+"white background",
+"buttons",
+"handheld console",
+"english",
+"multiple views",
+"centered"
+]
+},
+{
+"name": "wallhaven-oglzx7",
+"color": "white",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/white/wallhaven-oglzx7.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/white/wallhaven-oglzx7.jpg",
+"keywords": [
+"anime girls",
+"manga",
+"women",
+"white background",
+"yoru (chainsaw man)",
+"scars",
+"simple background",
+"edit",
+"centered",
+"arm support",
+"schoolgirl",
+"school uniform",
+"black hair",
+"cityscape",
+"japanese",
+"closed mouth",
+"ringed eyes",
+"high-angle",
+"building",
+"women outdoors",
+"chainsaw man",
+"rooftops",
+"long hair",
+"long sleeves"
+]
+},
+{
+"name": "anime-girl-mask-4k-wallpaper-uhdpaper-com-348-5-o",
+"color": "yellow",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/anime-girl-mask-4k-wallpaper-uhdpaper-com-348-5-o.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/anime-girl-mask-4k-wallpaper-uhdpaper-com-348-5-o.jpg",
+"keywords": []
+},
+{
+"name": "dominik-mayer-21",
+"color": "yellow",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/dominik-mayer-21.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/dominik-mayer-21.jpg",
+"keywords": []
+},
+{
+"name": "shibainu",
+"color": "yellow",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/shibainu.jpeg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/shibainu.jpeg",
+"keywords": []
+},
+{
+"name": "wallhaven-6ly77w",
+"color": "yellow",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/wallhaven-6ly77w.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/wallhaven-6ly77w.jpg",
+"keywords": [
+"jessica woulfe",
+"digital art",
+"artwork",
+"illustration",
+"digital painting",
+"sunset",
+"mansions",
+"architecture",
+"horse",
+"horse riding",
+"women",
+"bridge",
+"4k",
+"river",
+"water",
+"flowers",
+"outdoors",
+"trees",
+"sunlight",
+"steps",
+"railing",
+"sun rays",
+"sky",
+"women outdoors"
+]
+},
+{
+"name": "wallhaven-jeew7y",
+"color": "yellow",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/wallhaven-jeew7y.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/wallhaven-jeew7y.jpg",
+"keywords": [
+"dahyun kal",
+"illustration",
+"trees",
+"house",
+"nature",
+"steps",
+"architecture",
+"asian architecture",
+"sunlight",
+"digital art",
+"forest",
+"lantern",
+"ultrawide",
+"branch"
+]
+},
+{
+"name": "wallhaven-lyjpmr",
+"color": "yellow",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/wallhaven-lyjpmr.jpg",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/wallhaven-lyjpmr.jpg",
+"keywords": [
+"artdroiiid_ii",
+"anime",
+"anime girls",
+"digital art",
+"artwork",
+"illustration",
+"digital painting",
+"women",
+"sitting",
+"waiting",
+"reading",
+"outdoors",
+"daylight",
+"nature",
+"clouds",
+"women outdoors",
+"long hair",
+"dark hair",
+"school uniform",
+"sunflowers",
+"utility pole",
+"ultrawide",
+"wide screen",
+"power lines",
+"sky",
+"bench",
+"skirt",
+"neckerchief",
+"ringed eyes",
+"sailor uniform",
+"petals",
+"looking away",
+"v-neck",
+"ahoge",
+"kisaragi ren (vspo!)",
+"virtual esports project (vspo!)",
+"virtual youtuber"
+]
+},
+{
+"name": "wallpaper2088",
+"color": "yellow",
+"thumb": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/wallpaper2088.png",
+"full": "https://raw.githubusercontent.com/alvarossantos/wallpaper/main/yellow/wallpaper2088.png",
+"keywords": []
+}
+];
+const colors = data.reduce((a,d)=>{(d.color||'').split(',').forEach(c=>{if(!a[c])a[c]=[];a[c].push(d)};return a}),{});
+const colorsSorted = Object.keys(colors).sort((a,b)=>colors[b].length-colors[a].length);
+
+function renderGrid(filter='all'){
+  const kw = document.getElementById('search').value.toLowerCase();
+  const colorSel = document.querySelector('#filters .active')?.dataset.color||'all';
+  const items = data.filter(d=>{
+    const matchColor = colorSel==='all'||(colorSel&&d.color===colorSel);
+    const matchKW = d.keywords.some(k=>k.toLowerCase().includes(kw));
+    const matchName = d.name.toLowerCase().includes(kw);
+    return matchColor && (matchKW||matchName);
+  });
+  const grid = document.getElementById('grid');
+  grid.innerHTML = items.map(d=>`
+    <div class="card" onclick="openLightbox('${d.full}')">
+      <img src="${d.thumb}" loading="lazy" alt="${d.name}">
+      <div class="meta">${d.name}</div>
+    </div>`).join('');
+  document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('active'));
+  if(colorSel!=='all')document.querySelector(`#filters button[data-color="${colorSel}"]`.classList.add('active');
+}
+
+function openLightbox(url){ document.getElementById('lightbox').style.display='flex'; document.getElementById('lightbox-img').src=url; }
+function closeLightbox(){ document.getElementById('lightbox').style.display='none'; }
+
+// init
+renderGrid();
+document.getElementById('search').addEventListener('input',()=>renderGrid());
+document.getElementById('filters').innerHTML = '<button data-all class="active">Todos</button>' +
+  colorsSorted.map(c=>`<button data-color="${c}">${c} <span class="count">${colors[c].length}</span></button>`).join('');
+
+document.querySelectorAll('#filters button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  renderGrid();
+}));
+</script>
+
+<div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" style="max-width:95vw;max-height:95vh"/><button class="close" onclick="event.stopPropagation();closeLightbox()">×</button></div></body></html>
